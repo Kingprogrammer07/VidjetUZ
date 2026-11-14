@@ -8,7 +8,8 @@ using static FullWidget.Native.Win32;
 
 namespace FullWidget.Windows;
 
-/// Shows the developer guide (docs/組件開發指南.md) rendered in the control center's style.
+/// Shows a developer guide (docs/組件開發指南.md or docs/插件開發指南.md) rendered in the control
+/// center's style. Links between the guides open the other one here.
 sealed class DocsWindow : Form
 {
     const string Host = "docs.fullwidget.local";
@@ -16,10 +17,13 @@ sealed class DocsWindow : Form
 
     readonly App app;
     readonly WebView2 web;
+    string which;
+    bool ready;
 
-    public DocsWindow(App app)
+    public DocsWindow(App app, string which)
     {
         this.app = app;
+        this.which = which;
         Text = $"{Strings.AppName} {Strings.DocsTitle}";
         Icon = AppIcon.Create();
         BackColor = Surface;
@@ -71,6 +75,21 @@ sealed class DocsWindow : Form
         }
     }
 
+    /// Shows the other guide ("widget" or "plugin"), or the same one again.
+    public void ShowGuide(string which, string? anchor = null)
+    {
+        this.which = which;
+        if (ready) Send(anchor);
+    }
+
+    void Send(string? anchor = null)
+    {
+        string text;
+        try { text = File.ReadAllText(Paths.Guide(which)); }
+        catch (IOException ex) { text = $"# {Strings.GuideMissing}\n\n{ex.Message}"; }
+        web.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { ev = "doc", d = text, lang = Strings.Lang, which, anchor }, Json.Web));
+    }
+
     static void OpenExternal(string uri)
     {
         if (Uri.TryCreate(uri, UriKind.Absolute, out var u) && u.Scheme is "http" or "https")
@@ -83,12 +102,19 @@ sealed class DocsWindow : Form
         try { msg = JsonSerializer.Deserialize<JsonElement>(e.WebMessageAsJson); }
         catch { return; }
         if (msg.ValueKind != JsonValueKind.Object || !msg.TryGetProperty("m", out var m)) return;
-        if (m.GetString() == "ready")
+        switch (m.GetString())
         {
-            string text;
-            try { text = File.ReadAllText(Paths.DeveloperGuide); }
-            catch (IOException ex) { text = $"# {Strings.GuideMissing}\n\n{ex.Message}"; }
-            web.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { ev = "doc", d = text, lang = Strings.Lang }, Json.Web));
+            case "ready":
+                ready = true;
+                Send();
+                break;
+            case "open": // a link to the other guide
+                if (msg.TryGetProperty("href", out var h) && h.GetString() is { } href && Paths.GuideFor(href) is { } other)
+                {
+                    int hash = href.IndexOf('#');
+                    ShowGuide(other, hash >= 0 ? Uri.UnescapeDataString(href[(hash + 1)..]) : null);
+                }
+                break;
         }
     }
 }

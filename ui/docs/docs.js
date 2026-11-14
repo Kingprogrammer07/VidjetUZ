@@ -6,11 +6,12 @@ const host = window.chrome && window.chrome.webview;
 const $ = (id) => document.getElementById(id);
 /** The few words of the reader itself, in the guide's language. */
 const WORDS = {
-  "zh-TW": { copy: "複製", copied: "已複製", toc: "目錄" },
-  "zh-CN": { copy: "复制", copied: "已复制", toc: "目录" },
-  en: { copy: "Copy", copied: "Copied", toc: "Contents" },
+  "zh-TW": { copy: "複製", copied: "已複製", toc: "目錄", copyAll: "複製全文", copyAllTip: "複製整份文檔的 Markdown，可以直接貼給 AI" },
+  "zh-CN": { copy: "复制", copied: "已复制", toc: "目录", copyAll: "复制全文", copyAllTip: "复制整份文档的 Markdown，可以直接贴给 AI" },
+  en: { copy: "Copy", copied: "Copied", toc: "Contents", copyAll: "Copy all", copyAllTip: "Copies the whole guide as Markdown, ready to paste to an AI" },
 };
 let words = WORDS["zh-TW"];
+let source = ""; // the Markdown being shown, for "Copy all"
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
@@ -71,16 +72,32 @@ function render(md) {
     const li = line.match(/^(\s*)([-*]|\d+\.)\s+(.*)$/);
     if (li) {
       const ordered = /\d/.test(li[2]);
-      const items = [];
+      const indent = li[1].length;
+      const items = []; // { text, sub: { ordered, items } }
       while (i < lines.length) {
         const m = lines[i].match(/^(\s*)([-*]|\d+\.)\s+(.*)$/);
-        if (m) { items.push(m[3]); i++; continue; }
+        // an indented item is a step inside the item above
+        if (m && m[1].length > indent && items.length) {
+          const last = items[items.length - 1];
+          (last.sub ||= { ordered: /\d/.test(m[2]), items: [] }).items.push(m[3]);
+          i++;
+          continue;
+        }
+        if (m) { items.push({ text: m[3] }); i++; continue; }
         // a wrapped line belongs to the item above
-        if (lines[i].trim() && /^\s{2,}/.test(lines[i]) && items.length) { items[items.length - 1] += " " + lines[i].trim(); i++; continue; }
+        if (lines[i].trim() && /^\s{2,}/.test(lines[i]) && items.length) {
+          const last = items[items.length - 1];
+          if (last.sub) last.sub.items[last.sub.items.length - 1] += " " + lines[i].trim(); else last.text += " " + lines[i].trim();
+          i++;
+          continue;
+        }
         break;
       }
-      const tag = ordered ? "ol" : "ul";
-      out.push(`<${tag}>${items.map((t) => `<li>${inline(t)}</li>`).join("")}</${tag}>`);
+      const list = (o, entries) => `<${o ? "ol" : "ul"}>${entries.join("")}</${o ? "ol" : "ul"}>`;
+      const html = items.map((it) => `<li>${inline(it.text)}${it.sub ? list(it.sub.ordered, it.sub.items.map((t) => `<li>${inline(t)}</li>`)) : ""}</li>`);
+      // a numbered list that goes on after a code block keeps counting: "3." starts at 3
+      const start = ordered && parseInt(li[2], 10) > 1 ? ` start="${parseInt(li[2], 10)}"` : "";
+      out.push(ordered ? `<ol${start}>${html.join("")}</ol>` : list(false, html));
       continue;
     }
 
@@ -92,12 +109,18 @@ function render(md) {
   return out.join("\n");
 }
 
-function show(md) {
+function show(md, anchor) {
+  source = md;
   const doc = $("doc");
   doc.innerHTML = render(md);
+  const all = $("copy-all");
+  all.textContent = words.copyAll;
+  all.title = words.copyAllTip;
+  all.hidden = false;
 
   // The guide's own contents list (for readers without this page) is replaced by the sidebar.
-  const first = doc.querySelector("h1 + p + ul, h1 + ul");
+  const intro = [...doc.children];
+  const first = intro.slice(0, Math.max(0, intro.findIndex((el) => el.matches("h2, hr")))).find((el) => el.matches("ul"));
   if (first && [...first.querySelectorAll("li")].every((li) => li.children.length === 1 && li.firstElementChild.matches('a[href^="#"]'))) first.remove();
 
   const heads = [...doc.querySelectorAll("h2")];
@@ -106,6 +129,8 @@ function show(md) {
     heads.map((h) => `<a href="#${h.id}" data-id="${h.id}">${esc(h.textContent)}</a>`).join("");
   if (title) document.title = title.textContent;
   follow(heads);
+  const target = anchor && document.getElementById(anchor);
+  $("page").scrollTop = target ? target.offsetTop - 24 : 0;
 }
 
 /** Highlights the section being read. */
@@ -121,15 +146,30 @@ function follow(heads) {
   update();
 }
 
+/** Shows "Copied" on a button for a moment. */
+function copied(button, label) {
+  button.textContent = words.copied;
+  button.classList.add("done");
+  setTimeout(() => { button.textContent = label; button.classList.remove("done"); }, 1600);
+}
+
 document.addEventListener("click", (e) => {
+  const all = e.target.closest(".copy-all");
+  if (all) {
+    navigator.clipboard.writeText(source).then(() => copied(all, words.copyAll));
+    return;
+  }
+  // a link to the other guide (組件開發指南.md, plugin-guide.en.md#…) opens it in this window
+  const md = e.target.closest('a[href*=".md"]');
+  if (md && !/^[a-z]+:/i.test(md.getAttribute("href"))) {
+    e.preventDefault();
+    if (host) host.postMessage({ m: "open", href: md.getAttribute("href") });
+    return;
+  }
   const copy = e.target.closest(".copy");
   if (copy) {
     const text = copy.nextElementSibling.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      copy.textContent = words.copied;
-      copy.classList.add("done");
-      setTimeout(() => { copy.textContent = words.copy; copy.classList.remove("done"); }, 1600);
-    });
+    navigator.clipboard.writeText(text).then(() => copied(copy, words.copy));
     return;
   }
   const a = e.target.closest('a[href^="#"]');
@@ -141,6 +181,6 @@ document.addEventListener("click", (e) => {
 });
 
 if (host) {
-  host.addEventListener("message", (e) => { if (e.data && e.data.ev === "doc") { words = WORDS[e.data.lang] || words; document.documentElement.lang = e.data.lang === "en" ? "en" : "zh"; $("toc").setAttribute("aria-label", words.toc); show(e.data.d); } });
+  host.addEventListener("message", (e) => { if (e.data && e.data.ev === "doc") { words = WORDS[e.data.lang] || words; document.documentElement.lang = e.data.lang === "en" ? "en" : "zh"; $("toc").setAttribute("aria-label", words.toc); show(e.data.d, e.data.anchor); } });
   host.postMessage({ m: "ready" });
 }

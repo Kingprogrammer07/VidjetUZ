@@ -638,6 +638,8 @@ Reading a folder needs no permission: the widget can read only the pictures in t
 
 When FullWidget can't do something yet, you don't have to wait for an update: write a plugin. A plugin is a small program you write for yourself, in any language (PowerShell, Python, Node, C#…). Your widgets send it requests and get its results back, and it can send data to them at any time. Your own plugins never go on the market and can't be put in packages; the market has only FullWidget's [official plugins](#official-plugins).
 
+**The full story is in the [plugin guide](plugin-guide.en.md)**: every detail of the protocol, complete examples in Python, Node.js, PowerShell and C#, debugging and common errors. It's written so you can hand the whole thing to an AI and have it write the plugin. This chapter is a summary.
+
 **Making one:** control center → **Settings** → **Plugins** → **New plugin**. This puts a working PowerShell sample in the plugins folder (`plugins` in FullWidget's data), opens it, and allows it.
 
 ```

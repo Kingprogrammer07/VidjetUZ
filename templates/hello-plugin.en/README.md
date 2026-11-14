@@ -14,4 +14,4 @@ console.log(await hello.call("top", { count: 3 }));
 hello.on("tick", (d) => console.log("tick", d.time));
 ```
 
-See "Plugins" in the developer guide for the details.
+The full details are in the plugin guide: Control Center → Settings → Plugins → Plugin guide. You can hand the whole guide to an AI and have it change this plugin for you.

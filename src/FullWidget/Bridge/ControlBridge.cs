@@ -268,7 +268,7 @@ sealed class ControlBridge(App app, ControlCenter? window = null)
             case "app.editMode": app.SetEditMode(On()); break;
             case "app.rescan": app.RescanWidgets(); break;
             case "app.fileAssociation": app.SetFileAssociation(On()); break;
-            case "app.guide": app.OpenDeveloperGuide(); break;
+            case "app.guide": app.OpenDeveloperGuide(Str(p, "doc") ?? "widget"); break;
 
             case "plugin.allow": app.Plugins.Allow(Req(p, "name")); break;
             case "plugin.restart": app.Plugins.Restart(Req(p, "name")); break;

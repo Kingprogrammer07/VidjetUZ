@@ -96,6 +96,26 @@ body {
 .copy:hover { color: var(--fg); }
 .copy.done { color: #0b1512; background: var(--accent); border-color: var(--accent); font-weight: 600; }
 
+/* "Copy all": the whole guide as Markdown, to paste to an AI */
+.copy-all {
+  position: sticky;
+  top: 18px;
+  float: right;
+  z-index: 2;
+  height: 32px;
+  margin: 18px 22px 0 0;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--raise);
+  color: var(--fg);
+  font: 600 13px var(--text);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+.copy-all:hover { border-color: var(--accent); }
+.copy-all.done { color: #0b1512; background: var(--accent); border-color: var(--accent); }
+
 .table { margin: 4px 0 18px; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
 .table table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.6; }
 .table th { text-align: left; font-weight: 600; font-size: 13px; color: var(--muted); background: var(--panel); padding: 8px 14px; white-space: nowrap; }

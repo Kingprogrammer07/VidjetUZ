@@ -672,8 +672,8 @@ const PLUGIN_STATUS = { running: "運行中", stopped: "沒在運行，組件用
 
 function pluginRows() {
   const list = S.plugins || [];
-  let html = row("自己寫插件", "你自己寫的小程式，讓你自己寫的組件做到 FullWidget 還做不到的事。組件用到時才啟動，不上市場。",
-    `<button class="btn small" data-action="pluginNew">${t("新建插件")}</button><button class="btn small quiet" data-action="pluginFolder">${t("打開資料夾")}</button>`, { key: "plugins" });
+  let html = row("自己寫插件", "你自己寫的小程式，讓你自己寫的組件做到 FullWidget 還做不到的事。組件用到時才啟動，不上市場。插件文檔可以整份交給 AI，讓它幫你寫。",
+    `<button class="btn small" data-action="pluginNew">${t("新建插件")}</button><button class="btn small quiet" data-action="pluginGuide">${t("插件文檔")}</button><button class="btn small quiet" data-action="pluginFolder">${t("打開資料夾")}</button>`, { key: "plugins" });
   for (const p of list) {
     const status = p.status === "unapproved" && p.changed ? t("plugin.json 改過了，等你再允許") : t(PLUGIN_STATUS[p.status] || p.status);
     const users = p.users.length ? " · " + t("{names} 在用", { names: p.users.join("、") }) : "";
@@ -1218,6 +1218,7 @@ function onAction(a) {
     case "import": api("package.import"); break;
     case "create": openSheet("create", {}); break;
     case "guide": api("app.guide"); break;
+    case "pluginGuide": api("app.guide", { doc: "plugin" }); break;
     case "widgetFolder": api("widget.openFolder", { widget: a.dataset.widget }); break;
     case "export": {
       const m = widgetOf(a.dataset.widget);
@@ -1399,7 +1400,7 @@ function onSheetAction(a) {
       if (!title) { input.focus(); return; }
       a.disabled = true;
       call("plugin.create", { title })
-        .then((r) => { sheet = null; renderSheet(); toast(t("已建立插件「{name}」，資料夾已打開", { name: r.name }), t("開發文檔"), () => api("app.guide")); })
+        .then((r) => { sheet = null; renderSheet(); toast(t("已建立插件「{name}」，資料夾已打開", { name: r.name }), t("插件文檔"), () => api("app.guide", { doc: "plugin" })); })
         .catch((e) => { a.disabled = false; err.textContent = e.message; err.hidden = false; input.focus(); });
       break;
     }

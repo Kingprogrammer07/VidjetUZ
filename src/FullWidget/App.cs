@@ -811,18 +811,20 @@ sealed class App : ApplicationContext
 
     DocsWindow? docs;
 
-    /// The developer guide, in its own window.
-    public void OpenDeveloperGuide()
+    /// A developer guide ("widget" or "plugin"), in its own window.
+    public void OpenDeveloperGuide(string which = "widget")
     {
-        if (!File.Exists(Paths.DeveloperGuide)) throw new BridgeException(Strings.GuideMissing);
+        if (which != "plugin") which = "widget";
+        if (!File.Exists(Paths.Guide(which))) throw new BridgeException(Strings.GuideMissing);
         if (docs == null || docs.IsDisposed)
         {
-            docs = new DocsWindow(this);
+            docs = new DocsWindow(this, which);
             docs.FormClosed += (_, _) => { docs = null; Trim.Soon(); };
             docs.Show();
         }
         else
         {
+            docs.ShowGuide(which);
             if (docs.WindowState == FormWindowState.Minimized) docs.WindowState = FormWindowState.Normal;
             docs.Activate();
         }
@@ -1017,7 +1019,7 @@ sealed class App : ApplicationContext
                 case "lang": SetLanguage(Arg(1)); break;
                 case "setting": SetSetting(Target(), Arg(2), ParseValue(string.Join(' ', a.Skip(3)))); break;
                 case "devmode": SetDeveloperMode(Arg(1) == "on"); break;
-                case "guide": OpenDeveloperGuide(); break;
+                case "guide": OpenDeveloperGuide(a.Length > 1 ? a[1] : "widget"); break;
                 case "new-widget": CreateWidget(string.Join(' ', a.Skip(1))); break;
                 case "export": Packages.Export(Widget(), string.Join(' ', a.Skip(2)).Trim('"')); break;
                 case "uninstall": Uninstall(Widget()); break;

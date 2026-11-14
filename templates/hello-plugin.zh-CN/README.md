@@ -14,4 +14,4 @@ console.log(await hello.call("top", { count: 3 }));
 hello.on("tick", (d) => console.log("tick", d.time));
 ```
 
-完整说明见开发文档的“插件”一章。
+完整说明见《插件开发指南》：控制中心 →“设置”→“插件”→“插件文档”。它可以整份交给 AI，让 AI 帮你改这个插件。

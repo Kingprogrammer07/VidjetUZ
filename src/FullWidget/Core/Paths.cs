@@ -27,10 +27,26 @@ static class Paths
     public static string MenuDir => Path.Combine(ResourceRoot, "ui", "menu");
     public static string DocsUiDir => Path.Combine(ResourceRoot, "ui", "docs");
     public static string TemplatesDir => Path.Combine(ResourceRoot, "templates");
-    /// The developer guide in the UI language (Chinese readers share the Traditional Chinese one).
-    public static string DeveloperGuide =>
-        Shell.Strings.Lang == "en" && File.Exists(EnglishGuide) ? EnglishGuide : Path.Combine(ResourceRoot, "docs", "組件開發指南.md");
-    static string EnglishGuide => Path.Combine(ResourceRoot, "docs", "widget-guide.en.md");
+    /// A developer guide in the UI language (Chinese readers share the Traditional Chinese one):
+    /// "widget" (writing widgets) or "plugin" (writing plugins).
+    public static string Guide(string which)
+    {
+        var (zh, en) = which == "plugin" ? ("插件開發指南.md", "plugin-guide.en.md") : ("組件開發指南.md", "widget-guide.en.md");
+        string english = Path.Combine(ResourceRoot, "docs", en);
+        return Shell.Strings.Lang == "en" && File.Exists(english) ? english : Path.Combine(ResourceRoot, "docs", zh);
+    }
+
+    /// Which guide a link names: "插件開發指南.md", "plugin-guide.en.md#…" → "plugin"; null for other files.
+    public static string? GuideFor(string link)
+    {
+        string file = Path.GetFileName(Uri.UnescapeDataString(link.Split('#', '?')[0]));
+        return file switch
+        {
+            "插件開發指南.md" or "plugin-guide.en.md" => "plugin",
+            "組件開發指南.md" or "widget-guide.en.md" => "widget",
+            _ => null,
+        };
+    }
 
     /// Where packages are unpacked before the user says yes. Inside the widgets folder, so the
     /// final move stays on one drive; the leading dot keeps the catalog from scanning it.
