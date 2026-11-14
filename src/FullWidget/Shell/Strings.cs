@@ -85,6 +85,8 @@ static class Strings
     public static string FilterImages => T("圖片|*.jpg;*.jpeg;*.png;*.gif;*.webp;*.bmp|所有檔案|*.*", "图片|*.jpg;*.jpeg;*.png;*.gif;*.webp;*.bmp|所有文件|*.*", "Pictures|*.jpg;*.jpeg;*.png;*.gif;*.webp;*.bmp|All files|*.*");
     public static string FilterAll => T("所有檔案|*.*", "所有文件|*.*", "All files|*.*");
     public static string UpdateAvailable(string v) => string.Format(T("FullWidget {0} 可以更新了，點這裏打開設定安裝。", "FullWidget {0} 可以更新了，点这里打开设置安装。", "FullWidget {0} is out. Click here to install it from Settings."), v);
+    public static string WidgetUpdate(string name, string v) => string.Format(T("「{0}」有新版本 {1}，點這裏更新。", "“{0}”有新版本 {1}，点这里更新。", "{0} {1} is out. Click here to update it."), name, v);
+    public static string WidgetUpdates(int n) => string.Format(T("{0} 個組件有新版本，點這裏更新。", "{0} 个组件有新版本，点这里更新。", "{0} of your widgets have new versions. Click here to update them."), n);
     public static string Updated(string v) => string.Format(T("FullWidget 已更新到 {0}。", "FullWidget 已更新到 {0}。", "FullWidget is now {0}."), v);
     public static string UpdateTo(string v) => string.Format(T("更新到 {0}…", "更新到 {0}…", "Update to {0}…"), v);
     public static string ShortcutInvalid => T("這個組合不能用，需要包含 Ctrl、Alt、Shift 或 Win（F1–F24 可單獨使用）", "这个组合不能用，需要包含 Ctrl、Alt、Shift 或 Win（F1–F24 可单独使用）", "That combination can't be used: include Ctrl, Alt, Shift or Win (F1–F24 work alone)");
@@ -143,5 +145,7 @@ static class Strings
     // ── new widget ──
     public static string EnterName => T("請輸入名稱", "请输入名称", "Enter a name");
     public static string NameTooLong => T("名稱太長（最多 40 個字）", "名称太长（最多 40 个字）", "The name is too long (40 characters at most)");
+    public static string PluginNameRequired => T("給插件起個名字", "给插件起个名字", "Give the plugin a name");
+    public static string PackageLocalOnly => T("這個組件要求「{0}」：執行本機命令和使用插件只給你自己寫的組件，不能從安裝包或組件市場安裝。", "这个组件要求“{0}”：执行本机命令和使用插件只给你自己写的组件，不能从安装包或组件市场安装。", "This widget asks for \"{0}\": running commands and using plugins is only for widgets you write yourself, not ones installed from a package or the market.");
     public static string NoTemplate => T("找不到組件模板", "找不到组件模板", "The widget template is missing");
 }

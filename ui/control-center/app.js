@@ -71,9 +71,11 @@ if (host) {
     } else if (msg.ev === "page") {
       flushEdits();
       disarm();
-      ui.page = msg.d === "create" ? "add" : msg.d;
+      ui.page = msg.d === "create" || msg.d === "online" ? "add" : msg.d;
+      if (msg.d === "online") ui.source = "online";
       remember();
       render();
+      if (msg.d === "online") { market = null; loadMarket(false); } // the host just read the list: show what it found
       if (msg.d === "create" && !sheet) openSheet("create", {});
     } else if (msg.ev === "install") {
       if (sheet && sheet.kind === "install" && sheet.data.token !== msg.d.token) api("package.cancel", { token: sheet.data.token });
@@ -284,7 +286,6 @@ function editor(i, name) {
         <div class="ed-actions"><button class="btn quiet danger" data-action="remove">${t("移除")}</button></div>
       </div>
       <div class="empty" data-key="off-${i.id}"><h3>${t("這個組件已關閉")}</h3>
-        <div>${t("它不在桌面上，也不會運行；設定、位置和保存的內容都還在，開啟後就回到原來的樣子。")}</div>
         <button class="btn primary" data-action="power" data-id="${i.id}">${t("開啟")}</button></div>`;
   }
   const tabs = [["content", "內容"], ["look", "外觀"], ["behavior", "位置與行為"]];
@@ -400,7 +401,26 @@ function marketState(w) {
   return !have ? "new" : have.builtin ? "builtin" : cmpVer(w.version, have.version) > 0 ? "update" : "installed";
 }
 const marketList = () => (market ? market.widgets.filter((w) => marketState(w) !== "builtin") : []);
-const updatesCount = () => marketList().filter((w) => marketState(w) === "update").length;
+const marketPlugins = () => (market && market.plugins) || [];
+const pluginState = (p) => (!p.installed ? "new" : cmpVer(p.version, p.installed) > 0 ? "update" : "installed");
+const updatesCount = () => marketList().filter((w) => marketState(w) === "update").length + marketPlugins().filter((p) => pluginState(p) === "update").length;
+const PLUG_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v5M15 3v5M6.5 8h11v3.5a5.5 5.5 0 0 1-11 0z"/><path d="M12 17v4"/></svg>';
+
+/** An official plugin in the market: what it is, what it runs, install or update. */
+function pluginCard(p, n) {
+  const st = pluginState(p);
+  const busy = installing === "plugin:" + p.id;
+  const btn = st === "installed" ? `<span class="have">${t("已安裝 v{v}", { v: esc(p.installed) })}</span>`
+    : `<button class="btn primary small" data-action="mPlugin" data-id="${esc(p.id)}"${busy ? " disabled" : ""}>${busy ? t("下載中…") : st === "update" ? t("更新到 v{v}", { v: esc(p.version) }) : t("安裝")}</button>`;
+  return `<article class="card plugin-card" data-key="mp-${esc(p.id)}" style="--i:${n}">
+    <div class="card-top"><span class="tile big plug">${PLUG_ICON}</span><div style="min-width:0"><h3>${esc(p.name)}</h3>
+      <div class="by"><span class="official">${t("官方")}</span> · <span class="num">v${esc(p.version)}</span></div></div></div>
+    <p>${esc(p.description || "")}</p>
+    <div class="perm">${t("在你的電腦上運行")}<code>${esc(p.run)}</code></div>
+    <div class="card-tools"><button class="link" data-action="mPage" data-url="${esc(p.page)}">${t("看原始碼")}</button></div>
+    <div class="card-foot"><span class="have">${st === "new" ? `<span class="num">${esc(kb(p.bytes))}</span>` : st === "update" ? t("已安裝 v{v}", { v: esc(p.installed) }) : ""}</span>${btn}</div>
+  </article>`;
+}
 const kb = (n) => (n < 1024 ? `${n} B` : n < 1048576 ? `${Math.round(n / 1024)} KB` : `${(n / 1048576).toFixed(1)} MB`);
 
 /** The widget's picture in the global theme and the app's language, falling back like the library does. */
@@ -445,7 +465,7 @@ function pageOnline() {
   const all = marketList();
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const cats = CATS.filter(([c]) => all.some((w) => w.category === c));
-  if (ui.cat && !cats.some(([c]) => c === ui.cat)) ui.cat = null;
+  if (ui.cat && ui.cat !== "plugins" && !cats.some(([c]) => c === ui.cat)) ui.cat = null;
   const found = all.filter((w) => (!ui.cat || w.category === ui.cat)
     && words.every((x) => `${w.id} ${w.name} ${w.description} ${w.author}`.toLowerCase().includes(x)));
   let body;
@@ -456,16 +476,21 @@ function pageOnline() {
     // updates first, then the newest
     const ups = found.filter((w) => marketState(w) === "update");
     const rest = found.filter((w) => marketState(w) !== "update").sort((a, b) => String(b.updated).localeCompare(String(a.updated)));
-    let n = 0;
-    body = note + ([...ups, ...rest].map((w) => marketCard(w, n++)).join("")
-      || `<div class="none" data-key="m-none">${all.length ? t("沒有名稱或說明含「{q}」的組件", { q: esc(query.trim()) }) : t("市場裏還沒有組件。")}</div>`)
-      + `<article class="card dev" data-key="m-dev" style="--i:${n}">
+    const dev = `<article class="card dev" data-key="m-dev" style="--i:0">
           <div class="card-top"><div><h3>${t("把你的組件放上市場")}</h3><div class="by">GitHub</div></div></div>
           <p>${t("寫好的組件可以投稿到組件市場，審核通過後大家都能在這裏安裝。")}</p>
           <div class="card-foot wrap"><button class="btn small" data-action="mSite">${t("怎樣投稿")}</button></div>
         </article>`;
+    let n = 1;
+    const plugins = ui.cat && ui.cat !== "plugins" ? [] : marketPlugins().filter((p) => words.every((x) => `${p.id} ${p.name} ${p.description}`.toLowerCase().includes(x)));
+    const pluginPart = plugins.length ? `<div class="gallery-head" data-key="mh-plugins"><h2>${t("官方插件")}</h2><span>${t("FullWidget 自己做的插件，讓組件拿到更多資料。只收官方的，原始碼都公開。")}</span></div>`
+      + plugins.map((p) => pluginCard(p, n++)).join("") : "";
+    const widgetsPart = ui.cat === "plugins" ? "" : ([...ups, ...rest].map((w) => marketCard(w, n++)).join("")
+      || `<div class="none" data-key="m-none">${all.length ? t("沒有名稱或說明含「{q}」的組件", { q: esc(query.trim()) }) : t("市場裏還沒有組件。")}</div>`);
+    body = note + dev + pluginPart + (pluginPart && widgetsPart ? `<div class="gallery-head" data-key="mh-widgets"><h2>${t("組件")}</h2></div>` : "") + widgetsPart;
   }
-  const chips = market && all.length ? [[null, "全部", all.length], ...cats.map(([c, l]) => [c, l, all.filter((w) => w.category === c).length])]
+  const chips = market && all.length ? [[null, "全部", all.length], ...cats.map(([c, l]) => [c, l, all.filter((w) => w.category === c).length]),
+    ...(marketPlugins().length ? [["plugins", "官方插件", marketPlugins().length]] : [])]
     .map(([c, l, k]) => `<button class="chip${(ui.cat || null) === c ? " on" : ""}" data-action="cat" data-cat="${c || ""}">${t(l)}<span class="num">${k}</span></button>`).join("") : "";
   return `<div class="page-head" data-key="h-add"><h1>${t("添加組件")}</h1>${sourceSwitch(true)}
       <div class="head-tools">
@@ -534,8 +559,17 @@ function permName(p) {
   if (p === "audio") return t("音量");
   if (p === "media") return t("媒體播放");
   if (p === "shell.launch") return t("打開程式");
+  if (p === "shell.run") return t("執行命令");
+  if (p.startsWith("plugin:fullwidget.")) return t("官方插件 {name}", { name: pluginTitle(p.slice(7)) });
+  if (p.startsWith("plugin:")) return t("插件 {name}", { name: p.slice(7) });
   if (p.startsWith("network:")) return p.slice(8) === "*" ? t("連到任何網站") : t("連網 {host}", { host: p.slice(8) });
   return p;
+}
+
+/** An official plugin's name, from the market list or the installed ones. */
+function pluginTitle(id) {
+  const m = marketPlugins().find((x) => x.id === id) || (S.plugins || []).find((x) => x.name === id);
+  return m ? m.name || m.title : id;
 }
 
 /** What each permission lets a widget do, for the install and allow dialogs. */
@@ -546,6 +580,9 @@ function permInfo(p) {
   if (p === "shell.launch") return { icon: "open", title: t("打開程式和檔案"), desc: t("打開你電腦上的程式、資料夾和檔案，並讀取它們的名稱和圖標。只在你信任這個組件時允許。"), warn: true };
   if (p === "audio") return { icon: "speaker", title: t("調整音量"), desc: t("讀取和改變系統音量，也可以靜音。") };
   if (p === "media") return { icon: "note", title: t("讀取和控制正在播放的媒體"), desc: t("看到正在播放的歌名、歌手和封面，可以播放、暫停和切換曲目。") };
+  if (p === "shell.run") return { icon: "open", title: t("在這台電腦上執行命令"), desc: t("運行 PowerShell 命令或其他程式，能做你能做的任何事。只有你自己寫的組件能有這個權限。"), warn: true };
+  if (p.startsWith("plugin:fullwidget.")) return { icon: "chip", title: t("使用官方插件「{name}」", { name: pluginTitle(p.slice(7)) }), desc: t("讀取這個 FullWidget 官方插件提供的資料。插件要另外安裝，在「添加組件 → 線上 → 官方插件」。") };
+  if (p.startsWith("plugin:")) return { icon: "chip", title: t("使用插件「{name}」", { name: p.slice(7) }), desc: t("和你的插件交換資料；插件本身要另外在「設定 → 插件」裏允許。"), warn: true };
   const h = p.slice(8);
   if (h === "*") return { icon: "globe", title: t("連到任何網站"), desc: t("可以和任何網站收發資料。"), warn: true };
   if (h.startsWith("*.")) return { icon: "globe", title: t("連到 {host} 和它的子網域", { host: h.slice(2) }), desc: t("和這些網站收發資料。") };
@@ -619,11 +656,79 @@ function pageSettings() {
         ${row("開發文檔", "怎樣寫組件，以及 widget.json 和 API 的完整說明。", `<button class="btn small" data-action="guide">${t("打開")}</button>`, { key: "guide" })}
         ${row("組件目錄", "放自己寫的或下載的組件。", `<span class="path" title="${esc(S.widgetsDir)}">${esc(S.widgetsDir)}</span><button class="btn small" data-action="openFolder" data-which="widgets">${t("打開")}</button>`, { key: "wdir" })}
         ${row("資料位置", S.portable ? "便攜模式：資料存在程式資料夾裏。" : "設定與組件保存的內容。", `<span class="path" title="${esc(S.dataDir)}">${esc(S.dataDir)}</span><button class="btn small" data-action="openFolder" data-which="data">${t("打開")}</button>`, { key: "ddir" })}
+        <div class="group-title">${t("插件")}</div>
+        ${pluginRows()}
         <div class="group-title">${t("關於")}</div>
         ${row("版本", updateNote(), updateCtl(), { key: "ver" })}
         ${row("自動檢查更新", "每天看一兩次有沒有新版本，有的話在托盤提示。只連 GitHub，不會自己安裝。", control({ key: "updateAuto", type: "toggle", label: "自動檢查更新" }, S.update?.auto === true, "app"), { key: "upd-auto" })}
+        ${row("組件更新提醒", "每天看一兩次你裝的組件在市場上有沒有新版本，有的話在托盤提示。只連組件市場，不會自己更新。", control({ key: "widgetUpdateAuto", type: "toggle", label: "組件更新提醒" }, S.widgetUpdateAuto === true, "app"), { key: "wupd-auto" })}
       </div></section>
     </div>`;
+}
+
+// ───────────────────────── plugins (Core/Plugins.cs) ─────────────────────────
+
+const PLUGIN_STATUS = { running: "運行中", stopped: "沒在運行，組件用到時啟動", unapproved: "等你允許", broken: "一直停下來，已經停止", invalid: "plugin.json 有問題" };
+
+function pluginRows() {
+  const list = S.plugins || [];
+  let html = row("自己寫插件", "你自己寫的小程式，讓你自己寫的組件做到 FullWidget 還做不到的事。組件用到時才啟動，不上市場。",
+    `<button class="btn small" data-action="pluginNew">${t("新建插件")}</button><button class="btn small quiet" data-action="pluginFolder">${t("打開資料夾")}</button>`, { key: "plugins" });
+  for (const p of list) {
+    const status = p.status === "unapproved" && p.changed ? t("plugin.json 改過了，等你再允許") : t(PLUGIN_STATUS[p.status] || p.status);
+    const users = p.users.length ? " · " + t("{names} 在用", { names: p.users.join("、") }) : "";
+    const n = esc(p.name);
+    const acts = p.status === "unapproved" ? `<button class="btn small primary" data-action="pluginAllow" data-name="${n}">${t("允許")}</button>`
+      : p.status === "running" ? `<button class="btn small" data-action="pluginRestart" data-name="${n}">${t("重新啟動")}</button><button class="btn small quiet" data-action="pluginStop" data-name="${n}">${t("停止")}</button>`
+      : p.status === "broken" ? `<button class="btn small" data-action="pluginRestart" data-name="${n}">${t("重新啟動")}</button>` : "";
+    html += `<div class="row plugin" data-key="plugin-${n}">
+      <div class="lab"><span class="pdot ${esc(p.status)}"></span>${esc(p.title)}${p.official ? `<span class="official">${t("官方")}</span>` : ""}${p.version ? `<span class="pname">v${esc(p.version)}</span>` : p.title.toLowerCase() !== p.name ? `<span class="pname">${n}</span>` : ""}
+        <small>${esc(status + users)}${p.description ? `<br>${esc(p.description)}` : ""}</small>
+        ${p.problem && p.status !== "running" ? `<small class="pproblem">${esc(p.problem)}</small>` : ""}</div>
+      <div class="ctl"><span class="path" title="${esc(p.run)}">${esc(p.run)}</span>${acts}<button class="btn small quiet" data-action="pluginFolder" data-name="${n}">${t("資料夾")}</button></div>
+    </div>`;
+  }
+  return html;
+}
+
+function sheetPluginNew() {
+  return `<div class="sheet-head"><div><h2 id="sheet-title">${t("新建插件")}</h2></div></div>
+    <div class="sheet-body">
+      <label class="field-label" for="new-name">${t("名稱")}</label>
+      <input class="field wide" id="new-name" maxlength="40" placeholder="${esc(t("例如：obs"))}" autocomplete="off" spellcheck="false" autofocus>
+      <p class="fine">${t("會在插件資料夾建立一個能運行的 PowerShell 插件並打開資料夾。用英文名稱，組件裏就用這個名字找到它。")}</p>
+      <p class="sheet-error" id="new-error" hidden></p>
+    </div>
+    <div class="sheet-foot"><span class="file"></span>
+      <button class="btn quiet" data-action="sheetCancel">${t("取消")}</button>
+      <button class="btn primary" data-action="sheetPluginCreate">${t("建立")}</button></div>`;
+}
+
+function sheetPluginGet(p) {
+  const update = p.installed && pluginState(p) === "update";
+  return `<div class="sheet-head"><span class="tile big plug">${PLUG_ICON}</span><div style="min-width:0"><h2 id="sheet-title">${update ? t("更新官方插件「{name}」？", { name: esc(p.name) }) : t("安裝官方插件「{name}」？", { name: esc(p.name) })}</h2>
+      <div class="meta"><span class="official">${t("官方")}</span> · <span class="num">v${esc(p.version)}${update ? ` ← v${esc(p.installed)}` : ""}</span></div></div></div>
+    <div class="sheet-body">
+      <p class="desc">${esc(p.description || "")}</p>
+      <p class="desc">${t("插件會用你的身份在這台電腦上運行下面這個命令，組件用到它時才啟動。它是 FullWidget 官方做的，原始碼在組件市場上公開。")}</p>
+      <pre class="cmd">${esc(p.run)}</pre>
+    </div>
+    <div class="sheet-foot"><span class="file"><button class="link" data-action="mPage" data-url="${esc(p.page)}">${t("看原始碼")}</button></span>
+      <button class="btn quiet" data-action="sheetCancel">${t("取消")}</button>
+      <button class="btn primary" data-action="sheetPluginGet">${update ? t("更新") : t("安裝")}</button></div>`;
+}
+
+function sheetPluginAllow(p) {
+  return `<div class="sheet-head"><span class="tile big missing">!</span><div style="min-width:0"><h2 id="sheet-title">${t("允許插件「{name}」？", { name: esc(p.title) })}</h2>
+      <div class="meta num">${esc(S.pluginsDir + "\\" + p.name)}</div></div></div>
+    <div class="sheet-body">
+      <p class="desc">${t("允許後，你的組件用到它時，FullWidget 會用你的身份運行下面這個命令。它能做你在這台電腦上能做的任何事，例如讀寫檔案、連網。")}</p>
+      <pre class="cmd">${esc(p.run)}</pre>
+      <p class="fine">${t("只允許你自己寫的、或你清楚它在做什麼的插件。plugin.json 改過之後要再允許一次。")}</p>
+    </div>
+    <div class="sheet-foot"><span class="file"></span>
+      <button class="btn quiet" data-action="sheetCancel">${t("取消")}</button>
+      <button class="btn primary" data-action="sheetPluginAllow">${t("允許")}</button></div>`;
 }
 
 // ───────────────────────── updates ─────────────────────────
@@ -1097,6 +1202,7 @@ function onAction(a) {
     case "mRefresh": loadMarket(true); break;
     case "mSite": api("market.open"); break;
     case "mPage": api("market.open", { url: a.dataset.url }); break;
+    case "mPlugin": { const p = marketPlugins().find((x) => x.id === a.dataset.id); if (p) openSheet("pluginGet", p); break; }
     case "mInstall":
       if (installing) break;
       installing = a.dataset.widget;
@@ -1133,6 +1239,11 @@ function onAction(a) {
     case "hotkeyClear": saveHotkey(a.dataset.hk, ""); break;
     case "lockAll": api("app.lockAll", { on: a.dataset.on === "true" }).then(() => toast(a.dataset.on === "true" ? t("已鎖定全部組件") : t("已解鎖全部組件"))); break;
     case "openFolder": api("app.openFolder", { which: a.dataset.which }); break;
+    case "pluginNew": openSheet("pluginNew", {}); break;
+    case "pluginFolder": api("plugin.folder", { name: a.dataset.name || null }); break;
+    case "pluginAllow": { const p = (S.plugins || []).find((x) => x.name === a.dataset.name); if (p) openSheet("pluginAllow", p); break; }
+    case "pluginRestart": api("plugin.restart", { name: a.dataset.name }).then(() => toast(t("已重新啟動「{name}」", { name: a.dataset.name }))); break;
+    case "pluginStop": api("plugin.stop", { name: a.dataset.name }); break;
     case "rescan": api("app.rescan").then(() => toast(t("已重新掃描組件目錄"))); break;
     case "restart": api("app.restart"); break;
     case "updateCheck": api("app.updateCheck").catch(() => {}); break;
@@ -1158,7 +1269,7 @@ function closeSheet() {
   renderSheet();
 }
 
-const SHEETS = { install: sheetInstall, allow: sheetAllow, create: sheetCreate, error: sheetError };
+const SHEETS = { install: sheetInstall, allow: sheetAllow, create: sheetCreate, error: sheetError, pluginNew: sheetPluginNew, pluginAllow: sheetPluginAllow, pluginGet: sheetPluginGet };
 
 function renderSheet() {
   const box = $("sheet");
@@ -1249,7 +1360,11 @@ function onSheetAction(a) {
       sheet = null; // answered: closing must not cancel it
       renderSheet();
       api("package.install", { token: d.token }).then((r) => {
-        if (r.update) toast(t("「{name}」現在是 v{v}", { name: r.name, v: r.version }));
+        const need = (d.permissions || []).filter((p) => p.startsWith("plugin:fullwidget.")).map((p) => p.slice(7))
+          .filter((id) => !(S.plugins || []).some((x) => x.name === id));
+        const get = need.length && marketPlugins().find((x) => x.id === need[0]);
+        if (get) toast(t("「{name}」要用官方插件「{plugin}」", { name: r.name, plugin: get.name }), t("安裝插件"), () => openSheet("pluginGet", get));
+        else if (r.update) toast(t("「{name}」現在是 v{v}", { name: r.name, v: r.version }));
         else toast(t("已安裝「{name}」，放到桌面了", { name: r.name }), t("設定它"), () => { ui.sel = r.instanceId; ui.tab = "content"; go("mine"); });
       });
       break;
@@ -1259,6 +1374,33 @@ function onSheetAction(a) {
       renderSheet();
       if (d.then === "add") addWidget(d.widget, true);
       else api("widget.grant", { widget: d.widget }).then(() => toast(t("已允許，組件已重新載入")));
+      break;
+    }
+    case "sheetPluginGet": {
+      sheet = null;
+      renderSheet();
+      installing = "plugin:" + d.id;
+      render();
+      call("market.installPlugin", { id: d.id })
+        .then(() => { toast(t("已安裝官方插件「{name}」", { name: d.name })); loadMarket(false); })
+        .catch((e) => toast(t("沒有成功：{msg}", { msg: e.message })))
+        .finally(() => { installing = null; render(); });
+      break;
+    }
+    case "sheetPluginAllow":
+      sheet = null;
+      renderSheet();
+      api("plugin.allow", { name: d.name }).then(() => toast(t("已允許「{name}」", { name: d.title })));
+      break;
+    case "sheetPluginCreate": {
+      const input = $("new-name");
+      const title = input.value.trim();
+      const err = $("new-error");
+      if (!title) { input.focus(); return; }
+      a.disabled = true;
+      call("plugin.create", { title })
+        .then((r) => { sheet = null; renderSheet(); toast(t("已建立插件「{name}」，資料夾已打開", { name: r.name }), t("開發文檔"), () => api("app.guide")); })
+        .catch((e) => { a.disabled = false; err.textContent = e.message; err.hidden = false; input.focus(); });
       break;
     }
     case "sheetCreate": {
@@ -1282,7 +1424,7 @@ $("sheet").addEventListener("mousedown", (e) => { if (e.target === e.currentTarg
 document.addEventListener("keydown", (e) => {
   if (!sheet) return;
   if (e.key === "Escape") { e.preventDefault(); closeSheet(); }
-  else if (e.key === "Enter" && e.target.id === "new-name") { e.preventDefault(); document.querySelector('[data-action="sheetCreate"]').click(); }
+  else if (e.key === "Enter" && e.target.id === "new-name") { e.preventDefault(); document.querySelector("#sheet .sheet-foot .btn.primary").click(); }
   else if (e.key === "Tab") {
     // keep focus inside the dialog
     const f = [...$("sheet").querySelectorAll("button:not([disabled]), input")];

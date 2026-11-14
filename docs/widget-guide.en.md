@@ -9,6 +9,7 @@ A widget is a folder: a `widget.json` file plus ordinary HTML, CSS and JavaScrip
 - [Looks: follow the theme](#looks-follow-the-theme)
 - [Dragging, menus and clicks](#dragging-menus-and-clicks)
 - [Permissions](#permissions)
+- [Plugins](#plugins)
 - [Debugging](#debugging)
 - [Packaging and sharing](#packaging-and-sharing)
 - [Questions](#questions)
@@ -430,6 +431,31 @@ document.addEventListener("drop", async (e) => {
 
 `pick` takes `type` `file` or `folder`, and `filter` `programs`, `images` or `all`.
 
+### Running commands: `widget.shell.run` (needs `shell.run`)
+
+Runs a command on this PC and gives back what it printed. Much of what FullWidget can't do yet is one line of PowerShell away. **Only widgets you wrote can use it**: packages and market widgets asking for it are refused.
+
+```js
+const r = await widget.shell.run("Get-Date -Format HH:mm");   // PowerShell by default
+// r = { code: 0, ok: true, stdout: "21:30\r\n", stderr: "", timedOut: false, truncated: false }
+
+await widget.shell.run("dir /b", { shell: "cmd", cwd: "C:\\Users" });
+await widget.shell.run("$input | Sort-Object", { input: "b\na\nc" }); // input goes to standard input, one item per line
+await widget.shell.exec("git", ["-C", "D:\\code", "status", "--short"]);  // a program, no shell in between
+
+// keep it current with setInterval
+setInterval(async () => {
+  const r = await widget.shell.run("(Get-CimInstance Win32_Battery).EstimatedChargeRemaining");
+  show(r.stdout.trim());
+}, 60_000);
+```
+
+- Commands run hidden, in the widget's own folder unless `cwd` says otherwise.
+- `timeout` is 30 s by default and at most 10 minutes; then the command is ended (`timedOut: true`). Commands also end when their widget closes.
+- Output encoding: UTF-8 for PowerShell and `exec`, `oem` for `cmd` (this PC's console code page). If an old console program prints garbage, add `encoding: "oem"`.
+- A failing command doesn't reject the promise: check `ok` and `code`; error messages are in `stderr`.
+- For something that keeps running and sends data on its own, such as watching another program, a [plugin](#plugins) fits better.
+
 ### Simplified ↔ Traditional Chinese: `widget.convertChinese`
 
 ```js
@@ -594,6 +620,8 @@ By default a widget can only show its own content: it can't go online, can't rea
 | `audio` | `widget.audio`: reading and changing the system volume and mute |
 | `media` | `widget.media`: what's playing (title, cover) and play, pause, skip |
 | `shell.launch` | `widget.shell.launch`, `pick`, `info`, `paths`: opening programs and files, choosing files, reading names and icons (users see a clear warning when allowing it) |
+| `shell.run` | `widget.shell.run`, `exec`: running commands on this PC (only for widgets you wrote) |
+| `plugin:name` | `widget.plugin("name")`: using one of your plugins (only for widgets you wrote); the official `plugin:fullwidget.*` ones work for any widget. See [Plugins](#plugins) |
 
 Reading a folder needs no permission: the widget can read only the pictures in the folder the user chose in its settings. See [`widget.files`](#a-folder-the-user-chose-widgetfiles).
 
@@ -602,8 +630,91 @@ Reading a folder needs no permission: the widget can read only the pictures in t
 - Widgets made with **New widget** are yours, so what they declare works right away.
 - Other people's widgets list their permissions when installed; pressing **Install** allows them. If an update asks for more, the user is asked again, and the new ones don't work until then.
 - A widget folder copied straight into the widgets folder asks the user the first time it's added to the desktop.
+- `shell.run` and `plugin:` can do anything, so they're only for widgets you wrote: packages (.fwz) asking for them are refused, and the market doesn't take them. The exception is FullWidget's official plugins (`plugin:fullwidget.*`): market widgets may use them too, and users see it when installing.
 
 **Network rules:** this covers more than `widget.fetch`: images, fonts, scripts, `fetch()` and WebSockets in the page can also only reach allowed sites. The difference is that a plain `fetch()` needs the site to allow CORS, and `widget.fetch` doesn't.
+
+## Plugins
+
+When FullWidget can't do something yet, you don't have to wait for an update: write a plugin. A plugin is a small program you write for yourself, in any language (PowerShell, Python, Node, C#…). Your widgets send it requests and get its results back, and it can send data to them at any time. Your own plugins never go on the market and can't be put in packages; the market has only FullWidget's [official plugins](#official-plugins).
+
+**Making one:** control center → **Settings** → **Plugins** → **New plugin**. This puts a working PowerShell sample in the plugins folder (`plugins` in FullWidget's data), opens it, and allows it.
+
+```
+plugins\
+  hello\
+    plugin.json    how to start it
+    main.ps1       the plugin
+```
+
+**plugin.json:**
+
+```json
+{
+  "name": "Hello",
+  "description": "What this plugin does",
+  "run": "main.ps1",
+  "idleMinutes": 5
+}
+```
+
+- `run`: how to start it, run in the plugin's folder. A script name alone runs with what usually runs it: `.ps1` with PowerShell, `.py` with `python`, `.js` with `node`, `.bat`/`.cmd` with cmd. A full command works too, e.g. `"python -u main.py --port 4455"` or `"bin\\tool.exe"`.
+- `idleMinutes`: how long it keeps running with no widget using it; 5 by default, `0` to keep it running until FullWidget closes.
+
+**Talking to it:** FullWidget writes one JSON request per line to the plugin's standard input; the plugin answers with one JSON line on standard output (UTF-8):
+
+```
+→ {"id": 1, "method": "hello", "params": {"name": "Sam"}, "widget": "user.my-widget"}
+← {"id": 1, "result": "Hello, Sam"}
+← {"id": 2, "error": "No such file"}               an error rejects the widget's promise
+← {"event": "changed", "data": {"scene": "Live"}}   any time; every widget listening gets it
+```
+
+- Standard output is for these JSON lines only. Messages for yourself go to **standard error**, which ends up in `app.log`.
+- Flush after each line, or FullWidget won't see it (Python gets `PYTHONUNBUFFERED`).
+- When standard input closes (end of input), it's time to stop; after 3 s the plugin is ended.
+- `FULLWIDGET_PLUGIN`, `FULLWIDGET_VERSION` and `FULLWIDGET_LANG` tell it its name, FullWidget's version and the UI language.
+- In Windows PowerShell 5.1, read input from `[Console]::OpenStandardInput()` (as the sample does): waiting on `[Console]::In` holds up the whole plugin.
+
+**From a widget:** declare `"permissions": ["plugin:hello"]` in `widget.json`, then:
+
+```js
+const hello = widget.plugin("hello");
+const text = await hello.call("hello", { name: "Sam" });         // waits for its result
+const off = hello.on("changed", (data) => render(data));         // its events; off() stops
+await hello.call("slow", null, { timeout: 120_000 });            // 30 s by default, at most 10 minutes
+```
+
+A plugin in Python looks like this:
+
+```python
+import json, sys
+for line in sys.stdin:                      # end of input: FullWidget wants us to stop
+    req = json.loads(line)
+    if req["method"] == "hello":
+        out = {"id": req["id"], "result": f"Hello, {req['params']['name']}"}
+    else:
+        out = {"id": req["id"], "error": f"no method {req['method']}"}
+    print(json.dumps(out), flush=True)
+```
+
+**When it runs:** it starts when a widget first uses it and stops after `idleMinutes` with no widget using it. If it ends on its own while widgets are listening to it, FullWidget starts it again after a moment; after 5 stops in 3 minutes it's left stopped: fix it, then press **Restart** under Settings → Plugins. Saving a file in its folder restarts a running plugin. When FullWidget closes, plugins and what they started close with it.
+
+### Official plugins
+
+The widget market has an Official plugins section with FullWidget's own plugins only: their names start with `fullwidget.`, their source is public in the [market's plugins folder](https://github.com/hmgvibe/fullwidget-market/tree/main/plugins), and it takes no submissions. Install and update them in the Control Center under Add widgets → Online → Official plugins; once installed they're allowed.
+
+Market widgets may use official plugins: declare `"plugin:fullwidget.perf"` in `permissions` and use it like your own. When someone installs your widget without the plugin, the Control Center offers it. Without the plugin, `call` fails (the message contains `no plugin`), so tell people in your widget where to get it.
+
+| Official plugin | Provides |
+|---|---|
+| `fullwidget.perf` Performance data | A `stats` event every second: GPU load, video memory, temperature, power and clock, and the frame rate of the game in front. Methods: `stats`, `info`, `enableFps`. See its [README](https://github.com/hmgvibe/fullwidget-market/tree/main/plugins/fullwidget.perf) |
+
+**Safety:** a plugin runs as you and can do anything you can on this PC. So:
+
+- A plugin runs only after you allow it under Settings → Plugins, which shows the command it runs. Plugins made with **New plugin** are allowed right away.
+- After `plugin.json` changes, it must be allowed again (changing its code doesn't need that).
+- Only widgets you wrote can use plugins. If someone asks you to drop a folder into `plugins`, read what it does first.
 
 ---
 

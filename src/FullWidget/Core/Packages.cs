@@ -43,6 +43,8 @@ static class Packages
             var m = Catalog.Load(root, builtin: false);
             if (Catalog.IsReserved(m.Id))
                 throw new InvalidDataException(string.Format(Strings.ReservedInstall, m.Id));
+            if (m.Permissions.FirstOrDefault(Permissions.LocalOnly) is { } local)
+                throw new InvalidDataException(string.Format(Strings.PackageLocalOnly, local));
             return new PendingPackage { Source = Path.GetFullPath(file), StageDir = stage, WidgetDir = root, Manifest = m };
         }
         catch

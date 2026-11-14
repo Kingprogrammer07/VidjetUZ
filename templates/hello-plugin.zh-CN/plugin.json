@@ -1,0 +1,6 @@
+{
+  "name": "Hello",
+  "description": "示例插件：打招呼、列出最占内存的程序，每 10 秒发一次 tick 事件。",
+  "run": "main.ps1",
+  "idleMinutes": 5
+}

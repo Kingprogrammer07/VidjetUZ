@@ -16,7 +16,7 @@ declare namespace FullWidget {
   type Layer = "desktop" | "normal" | "top";
 
   /** Declared in widget.json "permissions"; third-party widgets also need the user's OK. */
-  type Permission = "system" | "notify" | "audio" | "media" | "shell.open" | "shell.launch" | `network:${string}`;
+  type Permission = "system" | "notify" | "audio" | "media" | "shell.open" | "shell.launch" | "shell.run" | `plugin:${string}` | `network:${string}`;
 
   interface PathInfo {
     path: string;
@@ -394,7 +394,25 @@ declare namespace FullWidget {
        *   document.addEventListener("drop", async e => { e.preventDefault(); add(await widget.shell.paths(e.dataTransfer.files)); });
        */
       paths(files: FileList | File[]): Promise<string[]>;
+      /**
+       * Runs a command on this PC, hidden, and gives back what it printed. PowerShell unless
+       * `shell: "cmd"`; it runs in the widget's folder unless `cwd` says otherwise. Needs "shell.run",
+       * which only widgets you wrote can have (a package asking for it is refused).
+       *   const r = await widget.shell.run("Get-Date -Format HH:mm");   // r.stdout
+       */
+      run(command: string, options?: RunOptions & { shell?: "powershell" | "cmd" }): Promise<RunResult>;
+      /** Runs a program with its arguments, without a shell. Needs "shell.run". */
+      exec(file: string, args?: string[], options?: RunOptions): Promise<RunResult>;
     };
+
+    /**
+     * One of your plugins: a program in FullWidget's plugins folder that your widget talks to.
+     * Needs "plugin:<name>" in permissions. See the developer guide, "Plugins".
+     *   const obs = widget.plugin("obs");
+     *   await obs.call("scene", { name: "Live" });
+     *   obs.on("changed", data => render(data));
+     */
+    plugin(name: string): Plugin;
 
     /** Simplified ↔ Traditional Chinese, character by character, with Windows' own tables. */
     convertChinese(text: string, to: "traditional" | "simplified"): Promise<string>;
@@ -414,6 +432,37 @@ declare namespace FullWidget {
 
     /** Writes a line to the FullWidget log (and nothing else). */
     log(...values: any[]): void;
+  }
+}
+
+declare namespace FullWidget {
+  interface RunOptions {
+    /** Folder to run in; the widget's folder by default. */
+    cwd?: string;
+    /** In ms; 30 000 by default, at most 600 000. The command is ended when it runs out. */
+    timeout?: number;
+    /** Text written to the command's input. */
+    input?: string;
+    /** How its output is encoded: "utf-8" (default; "oem" for shell: "cmd"), or "oem" / "ansi" for older console programs. */
+    encoding?: "utf-8" | "oem" | "ansi";
+  }
+  interface RunResult {
+    /** Exit code; null if it was ended for running too long. */
+    code: number | null;
+    /** Exit code 0. */
+    ok: boolean;
+    stdout: string;
+    stderr: string;
+    timedOut: boolean;
+    /** Output past 4 M characters was left out. */
+    truncated: boolean;
+  }
+  interface Plugin {
+    readonly name: string;
+    /** Sends {"id", "method", "params"} to the plugin and resolves with its "result" (or rejects with its "error"). timeout: ms, 30 000 by default. */
+    call<T = any>(method: string, params?: any, options?: { timeout?: number }): Promise<T>;
+    /** The plugin's {"event", "data"} lines; "*" gets every event as (data, event). Starts the plugin if needed. Returns a function that stops listening. */
+    on(event: string, listener: (data: any, event: string) => void): () => void;
   }
 }
 

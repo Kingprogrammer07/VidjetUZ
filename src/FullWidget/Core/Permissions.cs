@@ -5,9 +5,18 @@ namespace FullWidget.Core;
 /// widgets the user made here are trusted with what they declare.
 static class Permissions
 {
-    /// "system", "notify", "audio", "media", "shell.open", "shell.launch", "network:&lt;host&gt;", "network:*.&lt;domain&gt;" or "network:*".
+    /// "system", "notify", "audio", "media", "shell.open", "shell.launch", "shell.run", "plugin:&lt;name&gt;",
+    /// "network:&lt;host&gt;", "network:*.&lt;domain&gt;" or "network:*".
     public static bool IsKnown(string p) =>
-        p is "system" or "notify" or "audio" or "media" or "shell.open" or "shell.launch" || (p.StartsWith("network:", StringComparison.Ordinal) && p.Length > "network:".Length);
+        p is "system" or "notify" or "audio" or "media" or "shell.open" or "shell.launch" or "shell.run"
+        || (p.StartsWith("network:", StringComparison.Ordinal) && p.Length > "network:".Length)
+        || (p.StartsWith("plugin:", StringComparison.Ordinal) && Plugins.IsName(p["plugin:".Length..]));
+
+    /// Running commands and using the user's own plugins: only for widgets the user wrote. A
+    /// package (.fwz, the market) asking for them is refused. FullWidget's official plugins
+    /// (fullwidget.*, from the market) may be used by any widget the user allows.
+    public static bool LocalOnly(string p) =>
+        p == "shell.run" || (p.StartsWith("plugin:", StringComparison.Ordinal) && !Plugins.IsOfficial(p["plugin:".Length..]));
 
     public static bool Trusted(AppConfig cfg, WidgetManifest m) =>
         m.Builtin || cfg.OwnWidgets.Contains(m.Id, StringComparer.OrdinalIgnoreCase);

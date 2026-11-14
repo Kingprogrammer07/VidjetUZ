@@ -88,6 +88,8 @@ sealed class WidgetWindow : NativeWindow
         app.Monitor.Unsubscribe(this);
         app.Audio.Unsubscribe(this);
         app.Media.Unsubscribe(this);
+        app.Commands.Stop(this);
+        app.Plugins.Unlisten(this);
         try { controller?.Close(); } catch { /* already gone */ }
         controller = null;
         Web = null;

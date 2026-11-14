@@ -232,6 +232,43 @@
     return s.duration > 0 ? Math.min(p, s.duration) : p;
   }
 
+  // ── commands and plugins (widgets you wrote yourself) ───────
+  function runOptions(o) {
+    o = o || {};
+    return { shell: o.shell, cwd: o.cwd, timeout: o.timeout, input: o.input == null ? undefined : String(o.input), encoding: o.encoding };
+  }
+  // plugin name → event → listeners; the first listener of a plugin starts listening to it
+  const pluginListeners = new Map();
+  const listening = (m) => [...m.values()].some((s) => s.size > 0);
+  function plugin(name) {
+    const n = String(name || "").toLowerCase();
+    return Object.freeze({
+      name: n,
+      call: (method, params, options) =>
+        call("plugin.call", { plugin: n, method: String(method), params: params === undefined ? null : params, timeout: options && options.timeout }),
+      on(event, fn) {
+        let m = pluginListeners.get(n);
+        if (!m) pluginListeners.set(n, (m = new Map()));
+        const first = !listening(m);
+        let set = m.get(event);
+        if (!set) m.set(event, (set = new Set()));
+        set.add(fn);
+        if (first) call("plugin.listen", { plugin: n }).catch((e) => console.error(`widget.plugin("${n}").on:`, e.message));
+        return () => {
+          set.delete(fn);
+          if (!listening(m)) call("plugin.unlisten", { plugin: n }).catch(() => {});
+        };
+      },
+    });
+  }
+  on("plugin", (d) => {
+    const m = d && pluginListeners.get(d.plugin);
+    if (!m) return;
+    for (const fn of [...(m.get(d.event) || []), ...(m.get("*") || [])]) {
+      try { fn(d.data, d.event); } catch (e) { console.error(e); }
+    }
+  });
+
   // ── network ────────────────────────────────────────────────
   async function hostFetch(url, options) {
     const o = options || {};
@@ -490,7 +527,14 @@
       pick: (options) => call("shell.pick", options || {}),
       /** Full paths of dropped files: in a "drop" handler, paths(e.dataTransfer.files). Needs "shell.launch". */
       paths: (files) => callWithFiles("shell.paths", {}, [...(files || [])]),
+      /** Runs a PowerShell (or cmd) command and gives back its output. Needs "shell.run"; only for widgets you wrote. */
+      run: (command, options) => call("shell.run", { command: String(command), ...runOptions(options) }),
+      /** Runs a program with arguments, no shell in between. Needs "shell.run". */
+      exec: (file, args, options) => call("shell.exec", { file: String(file), args: [...(args || [])].map(String), ...runOptions(options) }),
     }),
+
+    /** One of your plugins (plugins folder in FullWidget's data); needs "plugin:<name>". */
+    plugin,
 
     /** Simplified ↔ Traditional Chinese, character by character (Windows' own tables). */
     convertChinese: (text, to) => call("text.chinese", { text: String(text ?? ""), to: to === "simplified" ? "simplified" : "traditional" }),

@@ -1,0 +1,6 @@
+{
+  "name": "Hello",
+  "description": "A sample plugin: says hello, lists the programs using the most memory, and sends a tick event every 10 seconds.",
+  "run": "main.ps1",
+  "idleMinutes": 5
+}

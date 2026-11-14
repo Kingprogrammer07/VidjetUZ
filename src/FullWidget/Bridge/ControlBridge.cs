@@ -28,6 +28,9 @@ sealed class ControlBridge(App app, ControlCenter? window = null)
             pauseFullscreen = cfg.PauseOnFullscreen,
             hotkeys = app.Keys?.Status(),
             update = app.Updater.State(),
+            widgetUpdateAuto = cfg.WidgetUpdateCheck,
+            plugins = app.Plugins.State(),
+            pluginsDir = Plugins.Dir,
             portable = Paths.Portable,
             editMode = app.EditMode,
             dataDir = Paths.DataDir,
@@ -258,6 +261,7 @@ sealed class ControlBridge(App app, ControlCenter? window = null)
             case "app.updateInstall": _ = app.Updater.InstallAsync(); break;
             case "app.updateCancel": app.Updater.Cancel(); break;
             case "app.updateAuto": app.Updater.SetAuto(On()); break;
+            case "app.widgetUpdateAuto": app.Market.SetAuto(On()); break;
             case "app.updatePage": app.Updater.OpenPage(); break;
             case "app.hotkeysPause": app.Keys?.Pause(On()); break;
             case "app.lockAll": app.SetAllLocked(On()); break;
@@ -266,8 +270,15 @@ sealed class ControlBridge(App app, ControlCenter? window = null)
             case "app.fileAssociation": app.SetFileAssociation(On()); break;
             case "app.guide": app.OpenDeveloperGuide(); break;
 
+            case "plugin.allow": app.Plugins.Allow(Req(p, "name")); break;
+            case "plugin.restart": app.Plugins.Restart(Req(p, "name")); break;
+            case "plugin.stop": app.Plugins.StopNow(Req(p, "name")); break;
+            case "plugin.folder": app.Plugins.OpenFolder(Str(p, "name")); break;
+            case "plugin.create": return Task.FromResult<object?>(new { name = app.Plugins.Create(Req(p, "title")) });
+
             case "market.list": return app.Market.ListAsync(On() || (p.TryGetProperty("refresh", out var rf) && rf.ValueKind == JsonValueKind.True))!;
             case "market.install": return app.Market.InstallAsync(Req(p, "id"));
+            case "market.installPlugin": return app.Market.InstallPluginAsync(Req(p, "id"));
             case "market.open":
             {
                 // the market's website, or a widget's page on it

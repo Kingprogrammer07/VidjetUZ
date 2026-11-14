@@ -32,8 +32,15 @@ sealed class AppConfig
     public bool AutoUpdateCheck { get; set; }
     /// The newest version the user was told about, so each one is announced once.
     public string? UpdateNotified { get; set; }
+    /// Look in the widget market now and then for new versions of the widgets the user installed
+    /// (Core/Market.cs), and say so from the tray. Its own switch, off unless turned on.
+    public bool WidgetUpdateCheck { get; set; }
+    /// The newest version of each widget the user was told about, so each one is announced once.
+    public Dictionary<string, string> WidgetUpdatesNotified { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     /// System-wide shortcuts by action (Shell/Hotkeys.cs), e.g. "notes": "Ctrl+Alt+N"; "" = off.
     public Dictionary<string, string> Hotkeys { get; set; } = FullWidget.Shell.Hotkeys.Defaults();
+    /// Plugins the user allowed to run: name → SHA-256 of the plugin.json they saw (Core/Plugins.cs).
+    public Dictionary<string, string> PluginApprovals { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public List<InstanceConfig> Instances { get; set; } = new();
 }
 

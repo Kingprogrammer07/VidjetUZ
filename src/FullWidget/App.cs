@@ -25,6 +25,9 @@ sealed class App : ApplicationContext
     public AudioVolume Audio { get; }
     public MediaSession Media { get; }
     public Market Market { get; }
+    /// The user's own plugins (Core/Plugins.cs) and the commands their widgets run (Providers/Commands.cs).
+    public Plugins Plugins { get; }
+    public Commands Commands { get; } = new();
     public Updater Updater { get; }
     /// Gives unused memory back to Windows after start and after big changes (Shell/MemoryTrim.cs).
     public MemoryTrim Trim { get; }
@@ -53,6 +56,7 @@ sealed class App : ApplicationContext
         Audio = new AudioVolume(this);
         Media = new MediaSession(this);
         Market = new Market(this);
+        Plugins = new Plugins(this);
         Updater = new Updater(this);
         Trim = new MemoryTrim(() => Env);
         menuIdle.Tick += (_, _) => ReleaseMenu();
@@ -192,6 +196,7 @@ sealed class App : ApplicationContext
             Trim.Soon();
 
             Updater.Start();
+            Market.Start();
             if (!string.IsNullOrEmpty(startupCommand)) Execute(startupCommand);
         }
         catch (Exception ex)
@@ -967,6 +972,8 @@ sealed class App : ApplicationContext
                 case "add": AddWidget(Catalog.Find(Arg(1)) ?? throw new ArgumentException($"widget '{Arg(1)}' not installed")); break;
                 case "remove": Remove(Target().Cfg); break;
                 case "control": OpenControlCenter(a.Length > 1 ? Target().Cfg.Id : null); break;
+                case "page": OpenControlCenter(page: Arg(1)); break; // for testing: "page online", "page settings"
+                case "widget-updates": _ = Market.CheckUpdatesAsync(); break; // for testing: look for new widget versions now
                 case "menu": // for testing: open a menu at a point; "menu tray x y" or "menu <widget> x y"; "menu close"
                 {
                     if (Arg(1) == "close") { menu?.Dismiss(); break; }
@@ -1048,6 +1055,8 @@ sealed class App : ApplicationContext
         Storage.Flush();
         foreach (var w in windows.Values.ToList()) w.Close();
         windows.Clear();
+        Commands.StopAll();
+        Plugins.StopAll();
         Notifier.Dispose();
         Audio.Dispose();
         Media.Dispose();

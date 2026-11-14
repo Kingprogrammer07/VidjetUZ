@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using FullWidget.Core;
+using FullWidget.Providers;
 using FullWidget.Windows;
 
 namespace FullWidget.Bridge;
@@ -153,6 +154,39 @@ sealed class WidgetBridge(App app)
                 Require(w, "shell.launch");
                 return files ?? Array.Empty<string>();
 
+            // widgets the user wrote: commands on this PC, and their own plugins
+            case "shell.run":
+            {
+                RequireLocal(w, "shell.run");
+                bool ps = (Str(p, "shell") ?? "powershell").Equals("powershell", StringComparison.OrdinalIgnoreCase);
+                var psi = Commands.ForShell(Req(p, "command"), Str(p, "shell"));
+                if (Str(p, "cwd") is { Length: > 0 } cwd) psi.WorkingDirectory = cwd;
+                return await app.Commands.RunAsync(w, psi, Str(p, "input"), Timeout(p, Commands.DefaultTimeout, Commands.MaxTimeout), Commands.EncodingFor(Str(p, "encoding") ?? (ps ? null : "oem")), ps);
+            }
+            case "shell.exec":
+            {
+                RequireLocal(w, "shell.run");
+                var args = p.TryGetProperty("args", out var al) && al.ValueKind == JsonValueKind.Array
+                    ? al.EnumerateArray().Select(x => x.ValueKind == JsonValueKind.String ? x.GetString()! : x.ToString()) : Enumerable.Empty<string>();
+                var psi = Commands.ForProgram(Req(p, "file"), args);
+                if (Str(p, "cwd") is { Length: > 0 } cwd) psi.WorkingDirectory = cwd;
+                return await app.Commands.RunAsync(w, psi, Str(p, "input"), Timeout(p, Commands.DefaultTimeout, Commands.MaxTimeout), Commands.EncodingFor(Str(p, "encoding")), false);
+            }
+            case "plugin.call":
+            {
+                string name = Req(p, "plugin");
+                RequireLocal(w, $"plugin:{name}");
+                return await app.Plugins.CallAsync(w, name, Req(p, "method"), Prop(p, "params"), Timeout(p, Plugins.DefaultTimeout, Plugins.MaxTimeout));
+            }
+            case "plugin.listen":
+            {
+                string name = Req(p, "plugin");
+                RequireLocal(w, $"plugin:{name}");
+                app.Plugins.Listen(w, name);
+                return null;
+            }
+            case "plugin.unlisten": app.Plugins.Unlisten(w, Req(p, "plugin")); return null;
+
             case "text.chinese":
                 return Launcher.ConvertChinese(Str(p, "text") ?? "", Str(p, "to") != "simplified");
 
@@ -172,6 +206,17 @@ sealed class WidgetBridge(App app)
         if (!Permissions.Has(w.Allowed, permission))
             throw new BridgeException(NotAllowedYet(permission));
     }
+
+    /// A permission only widgets made on this PC get: declared, and not from a package (those are
+    /// refused when installing); a widget copied in by hand needs the user's OK like any other.
+    void RequireLocal(WidgetWindow w, string permission)
+    {
+        Require(w, permission);
+        if (w.Manifest.Builtin) throw new BridgeException($"built-in widgets don't use \"{permission}\"");
+    }
+
+    static TimeSpan Timeout(JsonElement p, TimeSpan fallback, TimeSpan max) =>
+        Num(p, "timeout") is double ms && ms > 0 ? TimeSpan.FromMilliseconds(Math.Min(ms, max.TotalMilliseconds)) : fallback;
 
     static void RequireBuiltin(WidgetWindow w)
     {
