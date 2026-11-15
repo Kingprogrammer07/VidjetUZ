@@ -278,6 +278,62 @@ h3 { font-size: 21px; line-height: 1.35; letter-spacing: -0.01em; }
 .meter:nth-child(2) i::after { background: var(--mint); }
 .meter b { font-size: 14px; color: var(--ink); text-align: right; font-weight: 600; }
 
+/* ── the three points, under the waterfall ── */
+.pillars { margin: clamp(32px, 5vh, 48px) 0 clamp(16px, 3vh, 32px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.pillars a { display: grid; gap: 6px; padding-top: 20px; border-top: 2px solid var(--ink); color: inherit; text-decoration: none; }
+.pillars .mono { font-size: 13px; color: var(--muted); }
+.pillars b { font: 700 clamp(20px, 1.8vw, 24px)/1.3 var(--display); letter-spacing: -0.01em; }
+.pillars b::after { content: " ↓"; color: var(--muted); font-weight: 400; }
+.pillars a > span:last-child { color: var(--muted); font-size: 15.5px; line-height: 1.6; }
+.pillars a:hover b { color: var(--link); }
+
+/* ── 03 extend ── */
+.ext { background: var(--dark); color: var(--on-dark); padding: clamp(96px, 14vh, 160px) 0; }
+.ext .kicker { color: var(--on-dark-muted); }
+.ext .kicker .mono { background: rgba(255, 255, 255, 0.08); color: var(--mint); }
+.ext .sec-sub { color: var(--on-dark-muted); }
+.ext-row { margin-top: clamp(56px, 9vh, 104px); display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 64px; align-items: center; }
+.ext-txt h3 { font: 700 clamp(24px, 2.2vw, 30px)/1.3 var(--display); letter-spacing: -0.015em; }
+.ext-txt p { margin-top: 12px; color: var(--on-dark-muted); font-size: 16.5px; }
+.ext .more { display: inline-block; margin-top: 16px; color: var(--mint); font-weight: 600; text-decoration: none; }
+.ext .more:hover { text-decoration: underline; }
+.codewin { min-width: 0; background: #14171c; border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+.codewin-tabs { display: flex; gap: 2px; padding: 8px 8px 0; background: #0b0d10; }
+.codewin-tabs button, .codewin-tabs span { font: 12.5px/1 var(--mono); color: #8f97a1; background: transparent; border: 0; padding: 9px 14px; border-radius: 8px 8px 0 0; cursor: pointer; white-space: nowrap; }
+.codewin-tabs button:hover { color: #e9ecef; }
+.codewin-tabs [aria-selected="true"], .codewin-tabs span { background: #14171c; color: #e9ecef; cursor: default; }
+.codewin pre { margin: 0; padding: 18px 20px 22px; font-size: 13px; line-height: 1.65; color: #cfd6dd; overflow-x: auto; scrollbar-width: thin; }
+#extCode { min-height: 31em; }
+.codewin .k { color: #7de2c4; } .codewin .s { color: #f4a6a0; } .codewin .c { color: #6f7883; }
+.ext .sheet { padding: 28px 30px; font-size: 16px; border-radius: 22px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 40px 70px -40px rgba(0, 0, 0, 0.9); }
+.ext .sheet-head b { font-size: 19px; }
+.ext .sheet-head span { font-size: 13px; }
+.ext .sheet-icon { width: 52px; height: 52px; border-radius: 15px; }
+.ext .sheet-icon::after { inset: 15px; border-width: 4px; }
+.ext .sheet > p { font-size: 14.5px; }
+.ext .sheet li { padding: 12px 16px; font-size: 15.5px; }
+.ext .sheet .sheet-no { font-size: 15px; }
+.ext .sheet-btns { margin-top: 22px; font-size: 14.5px; }
+.ext .sheet-btns b { padding: 10px 16px; border-radius: 12px; }
+.market { margin-top: clamp(64px, 10vh, 112px); padding-top: 32px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.market-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 24px; }
+.market-head h3 { font: 700 22px/1.3 var(--display); }
+.market-head .more { margin-top: 0; }
+.market-grid { margin-top: 24px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 20px; }
+.market-grid h4 { margin: 12px 0 0; font: 600 16px/1.35 var(--display); }
+.market-grid p { margin-top: 2px; color: var(--on-dark-muted); font-size: 13.5px; }
+.market-grid .w-pic img.icon { inset: 30%; width: 40%; height: 40%; }
+
+/* ── open: three entries side by side ── */
+.ledger { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; align-items: start; }
+.ledger .entry, .ledger .entry:first-child { padding: 28px 0 0; border-top: 1px solid var(--line); }
+
+/* ── download: the three files ── */
+.files { margin-top: 26px; font-size: 15px; color: var(--on-dark-muted); }
+.files ul { margin-top: 10px; display: grid; gap: 8px; }
+.files li { display: grid; grid-template-columns: 6.5em minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.files code { color: #fff; font-size: 13.5px; }
+
 /* ── ⑤ download ── */
 .get { background: var(--dark); color: var(--on-dark); padding: clamp(80px, 12vh, 140px) 0; }
 .get-in { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 56px; align-items: start; }
@@ -326,6 +382,7 @@ h3 { font-size: 21px; line-height: 1.35; letter-spacing: -0.01em; }
 @media (max-width: 1080px) {
   .nav { display: none; }
   .details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ledger { grid-template-columns: 1fr 1fr; }
   .deep-grid { gap: 32px; }
 }
 @media (max-width: 860px) {
@@ -361,7 +418,17 @@ h3 { font-size: 21px; line-height: 1.35; letter-spacing: -0.01em; }
   .desk.tuning .clock-slot { top: 30%; width: 70%; }
   .desk.coding .clock-slot { left: 50%; top: 20%; width: 50%; }
   .panel-code { left: 4%; top: auto; bottom: 4%; translate: none; max-height: 56%; }
-  .ledger { grid-template-columns: 1fr; gap: 48px; }
+  .ledger { grid-template-columns: 1fr; gap: 32px; }
+  .pillars { grid-template-columns: 1fr; gap: 0; }
+  .hero-act { align-items: flex-start; }
+  .s-widgets .pin { left: auto; right: -10px; top: -14px; }
+  .pillars a { padding: 16px 0; border-top-width: 1px; border-top-color: var(--line); }
+  .pillars li:first-child a { border-top: 2px solid var(--ink); }
+  .ext-row { grid-template-columns: 1fr; gap: 28px; }
+  .ext .sheet { padding: 22px; }
+  #extCode { min-height: 0; }
+  .codewin pre { font-size: 12px; padding: 14px 16px 18px; }
+  .market-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 12px; }
   .sec-sub { font-size: 16.5px; }
   .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--gutter)); padding: 2px var(--gutter); }
   .chips::-webkit-scrollbar { display: none; }

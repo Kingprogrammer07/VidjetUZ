@@ -12,100 +12,126 @@
   const T = {
     "zh-CN": {
       _title: "FullWidget — 一个不一样的 Windows 桌面小组件",
-      _desc: "FullWidget：免费、开源的 Windows 11 桌面小组件。38 个组件、三套主题，打开就好看；想要更多，就用 HTML、CSS、JS 自己写。",
-      skip: "跳到内容", navLabel: "页面", navEasy: "简单上手", navDeep: "深入自定义", navOpen: "开源", navDownload: "下载", langLabel: "语言",
+      skip: "跳到内容", navLabel: "页面", navDeep: "深入自定义", navOpen: "开源", navDownload: "下载", langLabel: "语言",
       heroTitle: '一个不一样的<br><span class="nowrap">Windows 桌面小组件</span>',
-      heroSub: '38 个组件、三套主题，打开就好看。<br>想要更多，就用 HTML、CSS、JS <span class="nowrap">自己写。</span><span class="nowrap">免费，开源。</span>',
       download: "下载 FullWidget", flowLabel: "38 个内置组件", flowPause: "暂停", flowPlay: "继续",
-      easyKicker: "简单上手", easyTitle: '解压，双击，<span class="nowrap">桌面就变好看了。</span>',
-      step1Title: "下载，解压，双击", step1Text: "不用安装，也不用账号。解压到任何文件夹，双击 FullWidget.exe 就能用，放在 U 盘里也行。",
       step2Title: "桌面马上有东西", step2Text: "时钟、天气和系统监控自己出现。拖动就能移动，靠近时自动对齐。",
-      step3Title: "想要更多，就添加", step3Text: "在控制中心从 38 个组件里挑，点一下就放到桌面。三套主题随时换。",
-      deepKicker: "深入自定义", deepTitle: '想改多深，<span class="nowrap">就改多深。</span>', clockTitle: "时钟组件",
+      step3Title: "想要更多，就添加", deepTitle: '想改多深，<span class="nowrap">就改多深。</span>', clockTitle: "时钟组件",
       lookHead: "外观", lookAccent: "强调色", lookRadius: "圆角", lookOpacity: "背景不透明度",
       deep1Title: "换一套主题", deep1Text: "三套主题：「量被画出来」「书桌上的纸」「玻璃上的字」。一键换掉整个桌面，也可以每个组件各用各的。",
       deep2Title: "调外观", deep2Text: "颜色、透明度、圆角、字体和大小，在控制中心的表单里边调边看，不用写代码。",
       deep3Title: "写一段 CSS", deep3Text: '表单不够用时，直接写 CSS 盖过去。保存就生效，只影响<span class="nowrap">这一个组件。</span>',
-      deep4Title: "自己写一个组件", deep4Text: "旁边这段，就是这个时钟自己的代码。一个组件就是一个小网页：HTML、CSS、JS，有类型提示、热重载和开发文档；写好打包成 .fwz 分享，或投稿到组件市场。",
-      deepGuide: "看开发文档 ↗",
       openKicker: "开源・放心", openTitle: '免费，开源，<span class="nowrap">什么都不收集。</span>',
       z1: "账号", z2: "广告", z3: "统计", zeroTitle: "没有账号、广告、统计", zeroText: "FullWidget 不会把你的数据发到网上。只有你放上桌面、需要联网的组件（例如天气）才会联网。",
       gplTitle: "每一行代码都公开", gplText: '源代码在 GitHub 上，谁都可以看、可以改。发布改过的版本，也要<span class="nowrap">一样开源。</span>', gplLink: "在 GitHub 上看 ↗",
       permName: "安装「护眼提醒」", permAsk: "它要：", permNotify: "显示通知（每 20 分钟提醒你看远处 20 秒）", permNo: "不会联网，也读不到你电脑上的文件。",
       permCancel: "取消", permOk: "安装并放到桌面",
-      permTitle: "组件要先问你", permText: "别人写的组件要连哪些网站、用哪些系统功能，安装前都列出来，你同意才装。组件之间互相隔离。",
       mBase: "起步", mEach: "每多一个组件", mAll: '38 个全开<span class="nowrap">（实测）</span>',
       lightTitle: "轻，而且懂得让路", lightText: "所有组件共用一个网页引擎进程；全屏玩游戏或看视频时自动暂停，不抢性能。",
-      getTitle: "下载 FullWidget", getSub: "免费。解压就能用。", getBtn: "下载完整版", getSlim: "精简版",
-      getSlimNote: '（需先安装 <a href="https://dotnet.microsoft.com/download/dotnet/9.0">.NET 9 桌面运行时</a>）',
-      specVer: "版本", specNotes: "版本说明", specOs: "系统", specOsVal: "Windows 11 · WebView2（已内置）", specLang: "语言", specLicense: "许可",
+      getTitle: "下载 FullWidget", specVer: "版本", specNotes: "版本说明", specOs: "系统", specOsVal: "Windows 11 · WebView2（已内置）", specLang: "语言", specLicense: "许可",
       ssTitle: "Windows 已保护你的电脑", ssMore: "更多信息", ssRun: "仍要运行", ssDont: "不运行",
-      helpTitle: "第一次打开时", helpText: "Windows 可能显示「Windows 已保护你的电脑」。这是因为程序还没有代码签名（正在申请），不是病毒。",
-      help1: "点 <b>更多信息</b>", help2: "点 <b>仍要运行</b>",
+      helpTitle: "第一次打开时", help1: "点 <b>更多信息</b>", help2: "点 <b>仍要运行</b>",
       footLabel: "页脚", footGuide: "开发文档", footPrivacy: "隐私", footNote: "© 2026 hmgvibe。「FullWidget」名称和标志不在开源许可范围内。",
-      navWidgets: "组件",
-      catKicker: "组件一览", catTitle: '38 个组件，<span class="nowrap">每天都用得上。</span>', catSub: "按分类看看都有什么。换个主题，每个组件都跟着变。",
-      catLabel: "分类", themeLabel: "主题", thInstrument: "量被画出来", thPaper: "书桌上的纸", thType: "玻璃上的字",
+      catTitle: '38 个组件，<span class="nowrap">每天都用得上。</span>', catLabel: "分类", themeLabel: "主题", thInstrument: "量被画出来", thPaper: "书桌上的纸", thType: "玻璃上的字",
       catMore: "显示全部 38 个", catAll: "全部", catTime: "时间", catWeather: "天气", catSystem: "系统", catProductivity: "效率", catInfo: "资讯", catMedia: "媒体与装饰",
-      detKicker: "小细节", detTitle: '用起来顺手的<span class="nowrap">小地方。</span>',
-      d1t: "靠近就对齐", d1p: "拖动时出现虚线参考线，靠近屏幕边缘或别的组件就吸过去，间距一样宽。按住 Ctrl 可以随意放。",
-      d2t: "拉大，内容跟着变大", d2p: "拖右下角改大小，文字和图表一起放大，不会只多出一片空白。",
-      d3t: "置顶，或沉到桌面", d3p: "每个组件可以选置顶、普通，或放在桌面层：被窗口盖住，不挡你做事。",
-      d4t: "卡片、毛玻璃、透明", d4p: "组件的底可以是实心卡片、毛玻璃，或完全透明只留文字；阴影也能关掉。",
-      d5t: "锁定和鼠标穿透", d5p: "锁定后就不会被误拖；开了穿透，点击会直接落到后面的桌面上。",
-      d6t: "同一个放好几个", d6p: "例如放三个时钟，各看一个时区；每个都有自己的设置和外观。",
-      d7t: "开机就在", d7p: "可以设置开机自动启动。组件的位置、大小和内容都会记住。",
-      d8t: "放进 U 盘带走", d8p: "在 FullWidget.exe 旁边放一个叫 portable 的空文件，设置就存在程序旁边，整个文件夹带着走。",
-      d9t: "三种语言", d9p: "繁体中文、简体中文和 English，跟随 Windows，也可以在设置里改。",
+      _desc: "FullWidget：免费、开源的 Windows 11 桌面小组件。装好就有 38 个组件；主题、外观、CSS 随你改；还能自己写组件、接插件，或从组件市场安装。",
+      navReady: "开箱即用", navDeep: "自定义", navExt: "扩展",
+      heroSub: '装好就有 38 个组件。<br>外观随你改，功能随你加。<span class="nowrap">免费，开源。</span>',
+      p1t: "开箱即用", p1p: "装好就有 38 个组件，点一下就放上桌面。",
+      p2t: "高度自定义", p2p: "主题、外观、CSS，连摆放和行为都由你定。",
+      p3t: "高扩展性", p3p: "自己写组件、接插件，或从组件市场安装。",
+      readyKicker: "开箱即用", readyTitle: '装好，<span class="nowrap">就有 38 个组件可用。</span>',
+      step1Title: "下载，安装", step1Text: "点几下“下一步”就装好，不用管理员权限，也不用账号。可以顺便设置开机启动。",
+      step3Text: "在控制中心从 38 个组件里挑，点一下就放到桌面。",
+      catKicker: "全部组件", catSub: "时间、天气、电脑状态、待办和便签、新闻和汇率，还有放音乐、看照片的。换个主题，每个组件都跟着变。",
+      deepKicker: "高度自定义",
+      detKicker: "摆放和行为", detTitle: '放在哪、怎么待着，<span class="nowrap">也由你定。</span>',
+      c1t: "每个组件有自己的设置", c1p: "时钟选时区、天气选城市、相框选文件夹。同一个组件可以放好几个，各设各的。",
+      c2t: "靠近就对齐", c2p: "拖动时出现虚线参考线，靠近屏幕边缘或别的组件就吸过去，间距一样宽。按住 Ctrl 可以随意放。",
+      c3t: "拉大，内容跟着变大", c3p: "拖右下角改大小，文字和图表一起放大，不会只多出一片空白。",
+      c4t: "置顶，或沉到桌面", c4p: "每个组件可以选置顶、普通，或放在桌面层：被窗口盖住，不挡你做事。",
+      c5t: "卡片、毛玻璃、透明", c5p: "组件的底可以是实心卡片、毛玻璃，或完全透明只留文字；阴影也能关掉。",
+      c6t: "锁定和鼠标穿透", c6p: "锁定后就不会被误拖；开了穿透，点击会直接落到后面的桌面上。",
+      extKicker: "高扩展性", extTitle: '不够用，<span class="nowrap">就自己加。</span>',
+      extSub: "组件是一个小网页，插件用什么语言写都行。写好的组件放上组件市场，别人点一下就能装。",
+      ext1Title: "一个组件，就是一个小网页",
+      ext1Text: "HTML、CSS、JS，用你熟悉的写法。SDK 给你系统信息、音量和媒体、文件、通知和联网；新建组件从模板开始，保存就重新加载，有类型提示和完整的开发文档。",
+      ext1Ai: "不会写也没关系：开发文档可以整份交给 AI，说出你想要什么，让它帮你写。", ext1Link: "看组件开发文档 ↗", codeLabel: "时钟组件的代码",
+      ext2Title: "接上任何程序",
+      ext2Text: "自己写的组件可以运行 PowerShell、cmd 或任何程序，把结果显示出来。还可以接插件：用 Python、Node.js、C#……写一个小程序，组件就能用它做 FullWidget 本来做不到的事。",
+      ext2Perf: "官方插件“性能数据”就是这样做的：显卡、显存、温度，还有游戏帧率。为了安全，命令和插件只给你自己写的组件用。", ext2Link: "看插件开发文档 ↗",
+      snip1: "// 运行一段 PowerShell，把结果放到组件上", snip2: "// 接上插件：官方的“性能数据”",
+      ext3Title: "分享出去，或装别人的",
+      ext3Text: "打包成 .fwz 文件发给朋友，双击就能安装；或投稿到组件市场，大家在控制中心“添加组件 → 在线”点一下就装，出了新版本会提醒。",
+      ext3Perm: "别人写的组件，安装前会列出它要连哪些网站、用哪些系统功能，你同意才装。组件之间互相隔离。",
+      marketTitle: "组件市场上现在有 {n} 个组件", marketLink: "打开组件市场 ↗", marketBy: "作者",
+      getSub: "免费。下载安装程序，装好就能用。", getBtn: "下载 FullWidget",
+      filesHead: "下载页上有三个文件，选一个就好：", file1: "安装程序，推荐。可以创建桌面快捷方式、设置开机启动。",
+      file2: "免安装，解压就能用，也能放进 U 盘带着走。",
+      file3: '精简版，要先安装 <a href="https://dotnet.microsoft.com/download/dotnet/9.0">.NET 9 桌面运行时</a>。',
+      helpText: "Windows 可能显示「Windows 已保护你的电脑」。这是因为程序没有代码签名，不是病毒。",
       copied: "已复制下载链接。FullWidget 是 Windows 电脑软件，请在电脑上打开。",
     },
     en: {
       _title: "FullWidget — A different kind of Windows desktop widget",
-      _desc: "FullWidget: free, open-source desktop widgets for Windows 11. 38 widgets and three themes that look good from the start; write your own in HTML, CSS and JS.",
-      skip: "Skip to content", navLabel: "Page", navEasy: "Easy to start", navDeep: "Make it yours", navOpen: "Open source", navDownload: "Download", langLabel: "Language",
+      skip: "Skip to content", navLabel: "Page", navDeep: "Make it yours", navOpen: "Open source", navDownload: "Download", langLabel: "Language",
       heroTitle: 'A different kind of<br><span class="nowrap">Windows desktop widget</span>',
-      heroSub: "38 widgets and three themes that look good from the start.<br>Want more? Write your own in HTML, CSS and JS. Free and open source.",
       download: "Download FullWidget", flowLabel: "38 built-in widgets", flowPause: "Pause", flowPlay: "Play",
-      easyKicker: "Easy to start", easyTitle: "Unzip, double-click, and your desktop looks good.",
-      step1Title: "Download, unzip, double-click", step1Text: "No installer, no account. Unzip it into any folder and double-click FullWidget.exe. It even runs from a USB stick.",
       step2Title: "Your desktop fills up", step2Text: "A clock, the weather and a system monitor appear by themselves. Drag them around; they snap into line.",
-      step3Title: "Add more", step3Text: "Pick from 38 widgets in the Control Center and put one on the desktop with a click. Switch between three themes any time.",
-      deepKicker: "Make it yours", deepTitle: "Go as deep as you like.", clockTitle: "Clock widget",
+      step3Title: "Add more", deepTitle: "Go as deep as you like.", clockTitle: "Clock widget",
       lookHead: "Look", lookAccent: "Accent", lookRadius: "Corners", lookOpacity: "Background opacity",
       deep1Title: "Switch the theme", deep1Text: "Three themes: Instrument, Paper and Glass. Change the whole desktop at once, or give each widget its own.",
       deep2Title: "Adjust the look", deep2Text: "Colours, opacity, corners, font and size, in a form that shows every change as you make it. No code.",
       deep3Title: "Add some CSS", deep3Text: "When the form isn't enough, write CSS to override anything. Save and it applies, to that widget only.",
-      deep4Title: "Write your own widget", deep4Text: "The code shown is this clock's own. A widget is a small web page: HTML, CSS and JS, with type hints, hot reload and a developer guide. Pack it as a .fwz file to share, or submit it to the widget market.",
-      deepGuide: "Read the developer guide ↗",
       openKicker: "Open and safe", openTitle: "Free, open source, and it collects nothing.",
       z1: "accounts", z2: "ads", z3: "tracking", zeroTitle: "No account, ads or tracking", zeroText: "FullWidget sends none of your data anywhere. Only widgets you put on the desktop that need the internet (the weather, say) go online.",
       gplTitle: "Every line of code is public", gplText: "The source is on GitHub for anyone to read and change. Changed versions that are shared must be open source too.", gplLink: "See it on GitHub ↗",
       permName: "Install “Eye break”", permAsk: "It wants to:", permNotify: "Show notifications (a reminder every 20 minutes to look far away)", permNo: "It can't go online or read files on your PC.",
       permCancel: "Cancel", permOk: "Install and add to desktop",
-      permTitle: "Widgets ask first", permText: "Before you install someone else's widget, you see every site it connects to and every system feature it uses; it installs only if you agree. Widgets are kept apart from each other.",
       mBase: "To start", mEach: "Each extra widget", mAll: "All 38 (measured)",
       lightTitle: "Light, and it gets out of the way", lightText: "All widgets share one web engine process, and they pause while a game or video runs full screen.",
-      getTitle: "Download FullWidget", getSub: "Free. Unzip and run.", getBtn: "Download", getSlim: "Small version",
-      getSlimNote: '(needs the <a href="https://dotnet.microsoft.com/download/dotnet/9.0">.NET 9 Desktop Runtime</a>)',
-      specVer: "Version", specNotes: "Release notes", specOs: "System", specOsVal: "Windows 11 · WebView2 (built in)", specLang: "Languages", specLicense: "License",
+      getTitle: "Download FullWidget", specVer: "Version", specNotes: "Release notes", specOs: "System", specOsVal: "Windows 11 · WebView2 (built in)", specLang: "Languages", specLicense: "License",
       ssTitle: "Windows protected your PC", ssMore: "More info", ssRun: "Run anyway", ssDont: "Don't run",
-      helpTitle: "The first time you open it", helpText: "Windows may say “Windows protected your PC”. That's because the app isn't code-signed yet (we've applied); it isn't a virus.",
-      help1: "Click <b>More info</b>", help2: "Click <b>Run anyway</b>",
+      helpTitle: "The first time you open it", help1: "Click <b>More info</b>", help2: "Click <b>Run anyway</b>",
       footLabel: "Footer", footGuide: "Developer guide", footPrivacy: "Privacy", footNote: "© 2026 hmgvibe. The FullWidget name and logo are not covered by the open-source license.",
-      navWidgets: "Widgets",
-      catKicker: "All widgets", catTitle: "38 widgets for every day.", catSub: "Browse them by group. Switch the theme and every widget changes with it.",
-      catLabel: "Group", themeLabel: "Theme", thInstrument: "Instrument", thPaper: "Paper", thType: "Glass",
+      catTitle: "38 widgets for every day.", catLabel: "Group", themeLabel: "Theme", thInstrument: "Instrument", thPaper: "Paper", thType: "Glass",
       catMore: "Show all 38", catAll: "All", catTime: "Time", catWeather: "Weather", catSystem: "System", catProductivity: "Productivity", catInfo: "Info", catMedia: "Media & decor",
-      detKicker: "Little things", detTitle: "The little things that make it easy.",
-      d1t: "Snaps into line", d1p: "Dashed guides appear as you drag; near a screen edge or another widget it snaps, with even gaps. Hold Ctrl to place it freely.",
-      d2t: "Bigger means bigger", d2p: "Drag the bottom-right corner to resize. Text and charts grow with it, instead of leaving empty space.",
-      d3t: "On top, or on the desktop", d3p: "Keep a widget on top, in the normal layer, or down on the desktop, where windows cover it and it never gets in the way.",
-      d4t: "Card, frosted or clear", d4p: "A widget can sit on a solid card or frosted glass, or be fully clear with only its text. Shadows can go too.",
-      d5t: "Lock and click-through", d5p: "Lock a widget so it can't be dragged by accident. With click-through on, clicks go straight to the desktop behind it.",
-      d6t: "As many as you like", d6p: "Put three clocks on the desktop, one per time zone. Each copy has its own settings and look.",
-      d7t: "There when you start", d7p: "Let it start with Windows. Where each widget sits, its size and what it shows are all remembered.",
-      d8t: "Take it with you", d8p: "Put an empty file named portable next to FullWidget.exe and settings stay beside the app, so the whole folder travels on a USB stick.",
-      d9t: "Three languages", d9p: "Traditional Chinese, Simplified Chinese and English. It follows Windows, or pick one in Settings.",
+      _desc: "FullWidget: free, open-source desktop widgets for Windows 11. 38 widgets the moment it's installed; change themes, looks and CSS; write your own widgets, add plugins, or install more from the widget market.",
+      navReady: "Ready to use", navDeep: "Make it yours", navExt: "Extend",
+      heroSub: "38 widgets the moment it's installed.<br>Change how they look, add what's missing. Free and open source.",
+      p1t: "Ready to use", p1p: "38 widgets as soon as it's installed, each a click away from your desktop.",
+      p2t: "Make it yours", p2p: "Themes, looks and CSS, down to where widgets sit and how they behave.",
+      p3t: "Extend it", p3p: "Write your own widgets, add plugins, or install more from the widget market.",
+      readyKicker: "Ready to use", readyTitle: "38 widgets, right after you install.",
+      step1Title: "Download and install", step1Text: "A few clicks on Next and it's done. No admin rights, no account. It can start with Windows too.",
+      step3Text: "Pick from 38 widgets in the Control Center and put one on the desktop with a click.",
+      catKicker: "All widgets", catSub: "Time, weather, how your PC is doing, to-dos and notes, news and exchange rates, music and photos. Switch the theme and every widget changes with it.",
+      deepKicker: "Make it yours",
+      detKicker: "Placement and behaviour", detTitle: "Where they sit and how they behave is up to you, too.",
+      c1t: "Every widget has its own settings", c1p: "A time zone for a clock, a city for the weather, a folder for the photo frame. Put several copies of one widget out, each set up its own way.",
+      c2t: "Snaps into line", c2p: "Dashed guides appear as you drag; near a screen edge or another widget it snaps, with even gaps. Hold Ctrl to place it freely.",
+      c3t: "Bigger means bigger", c3p: "Drag the bottom-right corner to resize. Text and charts grow with it, instead of leaving empty space.",
+      c4t: "On top, or on the desktop", c4p: "Keep a widget on top, in the normal layer, or down on the desktop, where windows cover it and it never gets in the way.",
+      c5t: "Card, frosted or clear", c5p: "A widget can sit on a solid card or frosted glass, or be fully clear with only its text. Shadows can go too.",
+      c6t: "Lock and click-through", c6p: "Lock a widget so it can't be dragged by accident. With click-through on, clicks go straight to the desktop behind it.",
+      extKicker: "Extend it", extTitle: "Missing something? Add it.",
+      extSub: "A widget is a small web page, and a plugin can be written in any language. Put your widget on the widget market and others install it with a click.",
+      ext1Title: "A widget is a small web page",
+      ext1Text: "HTML, CSS and JS, written the way you already know. The SDK gives you system info, volume and media, files, notifications and the network. New widgets start from a template, reload when you save, and come with type hints and a full developer guide.",
+      ext1Ai: "Can't code? Hand the whole guide to an AI, say what you want, and let it write the widget.", ext1Link: "Read the widget guide ↗", codeLabel: "The clock widget's code",
+      ext2Title: "Hook up any program",
+      ext2Text: "Your own widgets can run PowerShell, cmd or any program and show what it prints. They can also use plugins: a small program in Python, Node.js, C# or anything else that lets a widget do what FullWidget can't do on its own.",
+      ext2Perf: "The official Performance data plugin works this way: GPU load, video memory, temperature and games' frame rates. To keep you safe, commands and plugins are only for widgets you wrote yourself.", ext2Link: "Read the plugin guide ↗",
+      snip1: "// Run some PowerShell and show the result", snip2: "// Use a plugin: the official Performance data",
+      ext3Title: "Share yours, install others'",
+      ext3Text: "Pack a widget as a .fwz file for a friend to double-click, or submit it to the widget market, where anyone installs it with a click under Add widgets → Online and hears when there's a new version.",
+      ext3Perm: "Before you install someone else's widget, you see every site it connects to and every system feature it uses; it installs only if you agree. Widgets are kept apart from each other.",
+      marketTitle: "{n} widgets on the widget market now", marketLink: "Open the widget market ↗", marketBy: "by",
+      getSub: "Free. Download the installer and you're set.", getBtn: "Download FullWidget",
+      filesHead: "The download page has three files. Pick one:", file1: "The installer. Recommended; it can add a desktop shortcut and start with Windows.",
+      file2: "No install: unzip and run, even from a USB stick.",
+      file3: 'Small version; needs the <a href="https://dotnet.microsoft.com/download/dotnet/9.0">.NET 9 Desktop Runtime</a> first.',
+      helpText: "Windows may say “Windows protected your PC”. That's because the app isn't code-signed; it isn't a virus.",
       copied: "Download link copied. FullWidget is a Windows PC app: open the link on your computer.",
     },
   };
@@ -120,6 +146,7 @@
   original._title = document.title;
   original._desc = $('meta[name="description"]').content;
   original.flowPause = "暫停"; original.flowPlay = "繼續";
+  Object.assign(original, { snip1: "// 執行一段 PowerShell，把結果放到組件上", snip2: "// 接上插件：官方的「性能數據」", marketBy: "作者", marketTitle: "組件市場上現在有 {n} 個組件" });
   Object.assign(original, { catAll: "全部", catTime: "時間", catWeather: "天氣", catSystem: "系統", catProductivity: "效率", catInfo: "資訊", catMedia: "媒體與裝飾" });
   original.copied = "已複製下載連結。FullWidget 是 Windows 電腦軟件，請在電腦上打開。";
 
@@ -150,7 +177,9 @@
     document.title = tr("_title");
     $('meta[name="description"]').content = tr("_desc");
     for (const b of $$(".langs button")) b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
-    for (const a of $$("[data-guide]")) a.href = a.href.replace(/docs\/.*$/, lang === "en" ? "docs/widget-guide.en.md" : "docs/組件開發指南.md");
+    const GUIDES = { widget: { "zh-TW": "組件開發指南.md", "zh-CN": "组件开发指南.md", en: "widget-guide.en.md" }, plugin: { "zh-TW": "插件開發指南.md", "zh-CN": "插件开发指南.md", en: "plugin-guide.en.md" } };
+    for (const a of $$("[data-guide]")) a.href = a.href.replace(/docs\/.*$/, "docs/" + GUIDES[a.dataset.guide][lang]);
+    marketLang();
     for (const img of $$("img[data-w]")) img.src = pic(img.dataset.w, img.dataset.t);
     for (const img of $$("img[data-app]")) img.src = `assets/app/${img.dataset.app}.${lang}.webp`;
     for (const fig of $$(".tile")) { const img = $("img", fig); img.src = pic(fig.dataset.folder, fig.dataset.theme); $("figcaption", fig).textContent = name(fig.dataset.folder); img.alt = name(fig.dataset.folder); }
@@ -172,7 +201,7 @@
 
   // ───────────────────────── top bar ─────────────────────────
   const top = $("#top");
-  const darks = $$(".deep, .get");
+  const darks = $$(".deep, .ext, .get");
   function topState() {
     top.classList.toggle("scrolled", scrollY > 8);
     const y = top.offsetHeight / 2;
@@ -347,41 +376,123 @@
     [".sec", "opacity: .35;"],
   ];
   const ACCENTS = ["#7de2c4", "#ffd166", "#ff8fa3", "#4cc9f0"];
-  // widgets/clock/main.js, shortened (the same in every language)
-  const JS = [
-    "function render() {",
-    "  const { h, m, s, wall } = partsNow();",
-    "  $(\"hh\").textContent = pad(h);",
-    "  $(\"mm\").textContent = pad(m);",
-    "  $(\"sec\").textContent = opts.showSeconds ? pad(s) : \"\";",
-    "  // …",
-    "  const cells = $(\"ticks\").children;",
-    "  for (let i = 0; i < 24; i++)",
-    "    cells[i].className = i < h ? \"past\" : i === h ? \"now\" : \"\";",
-    "}",
+  // the clock widget's own files, shortened (the same in every language)
+  const FILES = {
+    json: [
+      "{",
+      "  \"id\": \"fullwidget.clock\",",
+      "  \"name\": { \"zh-TW\": \"時鐘\", \"en\": \"Clock\" },",
+      "  \"entry\": \"index.html\",",
+      "  \"size\": { \"width\": 300, \"height\": 150 },",
+      "  \"permissions\": [],",
+      "  \"settings\": [",
+      "    { \"key\": \"use24h\", \"type\": \"toggle\", \"default\": true },",
+      "    { \"key\": \"showSeconds\", \"type\": \"toggle\", \"default\": true },",
+      "    { \"key\": \"timezone\", \"type\": \"select\", \"default\": \"local\" }",
+      "  ]",
+      "}",
+    ],
+    html: [
+      "<link rel=\"stylesheet\" href=\"style.css\">",
+      "<main class=\"clock\">",
+      "  <div class=\"time\">",
+      "    <span id=\"hh\"></span><span class=\"colon\">:</span><span id=\"mm\"></span>",
+      "    <span class=\"sec\" id=\"sec\"></span>",
+      "  </div>",
+      "  <div class=\"ticks\" id=\"ticks\"></div>",
+      "</main>",
+      "<script src=\"main.js\"></script>",
+    ],
+    js: [
+      "function render() {",
+      "  const { h, m, s } = partsNow();",
+      "  $(\"hh\").textContent = pad(h);",
+      "  $(\"mm\").textContent = pad(m);",
+      "  $(\"sec\").textContent = opts.showSeconds ? pad(s) : \"\";",
+      "  const cells = $(\"ticks\").children;",
+      "  for (let i = 0; i < 24; i++)",
+      "    cells[i].className = i < h ? \"past\" : i === h ? \"now\" : \"\";",
+      "}",
+      "",
+      "// Tick exactly on the second so the display never lags.",
+      "function schedule() {",
+      "  render();",
+      "  setTimeout(schedule, 1000 - (Date.now() % 1000) + 5);",
+      "}",
+      "",
+      "widget.settings.onChange((s) => { opts = s; render(); });",
+      "schedule();",
+    ],
+  };
+  const SNIP = (c1, c2) => [
+    c1,
+    "const r = await widget.shell.run(\"git status --short\");",
+    "changes.textContent = r.stdout;",
     "",
-    "// Tick exactly on the second so the display never lags.",
-    "function schedule() {",
-    "  render();",
-    "  setTimeout(schedule, 1000 - (Date.now() % 1000) + 5);",
-    "}",
-    "",
-    "widget.settings.onChange((s) => { opts = s; render(); });",
-    "widget.appearance.onChange(render);",
-    "schedule();",
+    c2,
+    "const perf = widget.plugin(\"fullwidget.perf\");",
+    "perf.on(\"stats\", (stats) => show(stats));",
   ];
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
   function highlight(line) {
     if (line.trim().startsWith("//")) return `<span class="c">${esc(line)}</span>`;
-    return esc(line).replace(/(&quot;|"[^"]*")/g, '<span class="s">$1</span>').replace(/\b(const|function|for|let)\b/g, '<span class="k">$1</span>');
+    if (line.trim().startsWith("<")) return esc(line).replace(/("[^"]*")/g, '<span class="s">$1</span>').replace(/(&lt;\/?[a-z]+)/g, '<span class="k">$1</span>');
+    return esc(line).replace(/("[^"]*")/g, '<span class="s">$1</span>').replace(/\b(const|function|for|let|await)\b/g, '<span class="k">$1</span>');
   }
-  function codeLang() { $("#jsCode").innerHTML = JS.map(highlight).join("\n"); }
+  let codeFile = "js";
+  function codeLang() {
+    $("#extCode").innerHTML = FILES[codeFile].map(highlight).join("\n");
+    $("#extSnip").innerHTML = SNIP(tr("snip1"), tr("snip2")).map(highlight).join("\n");
+  }
+  for (const b of $$(".codewin-tabs button")) b.addEventListener("click", () => {
+    codeFile = b.dataset.file;
+    for (const x of $$(".codewin-tabs button")) x.setAttribute("aria-selected", String(x === b));
+    codeLang();
+  });
+
+  // ───────────────────────── ③ what's on the widget market, read live ─────────────────────────
+  const MARKET = "https://hmgvibe.github.io/fullwidget-market/";
+  const CAT_WALL = { time: 0, weather: 2, system: 5, productivity: 3, info: 1, media: 4 };
+  let market = null, marketCount = 0;
+  function marketLang() {
+    if (!market) return;
+    $("#marketTitle").textContent = tr("marketTitle").replace("{n}", marketCount);
+    const grid = $("#marketGrid");
+    grid.innerHTML = "";
+    for (const w of market) {
+      const li = document.createElement("li");
+      const box = document.createElement("div");
+      box.className = `w-pic wp${CAT_WALL[w.category] ?? 5}`;
+      const img = document.createElement("img");
+      img.loading = "lazy"; img.decoding = "async"; img.alt = "";
+      img.src = MARKET + (w.preview ? w.preview.replace("{theme}", "instrument").replace("{lang}", lang) : w.icon);
+      if (!w.preview) img.className = "icon";
+      box.append(img);
+      const h = document.createElement("h4");
+      h.textContent = (w.name && (w.name[lang] || w.name.en)) || w.id;
+      const by = document.createElement("p");
+      by.textContent = `${tr("marketBy")} ${w.author}`;
+      li.append(box, h, by);
+      grid.append(li);
+    }
+  }
+  fetch(MARKET + "index.json").then((r) => r.json()).then((j) => {
+    // other people's widgets first (it's their market too), then the newest; a few at most
+    const own = (w) => (w.author === "hmgvibe" ? 1 : 0);
+    const all = j.widgets || [];
+    marketCount = all.length;
+    market = [...all].sort((a, b) => own(a) - own(b) || !a.preview - !b.preview || String(b.updated).localeCompare(String(a.updated))).slice(0, 8);
+    if (!market.length) return;
+    marketLang();
+    $("#market").hidden = false;
+  }).catch(() => { /* offline: the section simply has no list */ });
 
   const mix = (a, b, t) => { const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)); const x = p(a), y = p(b); return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
   let progress = 0, lastStage = "";
   function stage(p) {
     progress = p;
-    const x = Math.min(3.999, Math.max(0, p * 4));
+    const steps = $$(".layer").length;
+    const x = Math.min(steps - 0.001, Math.max(0, p * steps));
     const i = Math.floor(x), f = x - i;
     $$(".layer").forEach((el, k) => el.classList.toggle("on", k === i));
     const cap = $("#caption");
@@ -393,8 +504,6 @@
     $$(".dots li").forEach((el, k) => el.classList.toggle("on", k <= i));
     $("#panelLook").classList.toggle("on", i === 1);
     $("#panelCss").classList.toggle("on", i === 2);
-    $("#panelCode").classList.toggle("on", i === 3);
-    desk.classList.toggle("coding", i === 3);
     desk.classList.toggle("tuning", i === 1 || i === 2);
 
     let theme = "instrument", look = "";
@@ -436,10 +545,11 @@
   function entrances() {
     if (!inView || reduce) return;
     const groups = [
-      [".easy .kicker", ".easy .h2"], [".scene"], [".scene-steps li"],
+      [".pillars li"], [".easy .kicker", ".easy .h2"], [".scene"], [".scene-steps li"],
       [".cat .kicker", ".cat .h2", ".cat .sec-sub", ".cat-bar"], [".deep .kicker", ".deep .h2"],
       [".details-sec .kicker", ".details-sec .h2"], [".details li"],
-      [".open .kicker", ".open .h2"], [".lead", ".side .entry"], [".get-main", ".get-help"],
+      [".ext .kicker", ".ext .h2", ".ext .sec-sub"], [".ext-row:nth-of-type(1) > *"], [".ext-row:nth-of-type(2) > *"], [".ext-row:nth-of-type(3) > *"],
+      [".open .kicker", ".open .h2"], [".ledger .entry"], [".get-main", ".get-help"],
     ];
     for (const sel of groups) {
       const els = sel.flatMap((s) => $$(s));
