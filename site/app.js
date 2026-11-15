@@ -11,7 +11,7 @@
   // Traditional Chinese is in the HTML; these are the other two.
   const T = {
     "zh-CN": {
-      _title: "FullWidget — 一个不一样的 Windows 桌面小组件",
+      _title: "FullWidget — 免费开源的 Windows 11 桌面小组件・桌面美化",
       skip: "跳到内容", navLabel: "页面", navDeep: "深入自定义", navOpen: "开源", navDownload: "下载", langLabel: "语言",
       heroTitle: '一个不一样的<br><span class="nowrap">Windows 桌面小组件</span>',
       download: "下载 FullWidget", flowLabel: "38 个内置组件", flowPause: "暂停", flowPlay: "继续",
@@ -73,7 +73,7 @@
       copied: "已复制下载链接。FullWidget 是 Windows 电脑软件，请在电脑上打开。",
     },
     en: {
-      _title: "FullWidget — A different kind of Windows desktop widget",
+      _title: "FullWidget — Free, open-source desktop widgets for Windows 11",
       skip: "Skip to content", navLabel: "Page", navDeep: "Make it yours", navOpen: "Open source", navDownload: "Download", langLabel: "Language",
       heroTitle: 'A different kind of<br><span class="nowrap">Windows desktop widget</span>',
       download: "Download FullWidget", flowLabel: "38 built-in widgets", flowPause: "Pause", flowPlay: "Play",
@@ -175,6 +175,7 @@
       if (el.dataset.i18nTitle) el.setAttribute("title", tr(el.dataset.i18nTitle));
     }
     document.title = tr("_title");
+    if (new URLSearchParams(location.search).has("lang")) $('link[rel="canonical"]').href = `${location.origin}${location.pathname}?lang=${lang}`;
     $('meta[name="description"]').content = tr("_desc");
     for (const b of $$(".langs button")) b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     const GUIDES = { widget: { "zh-TW": "組件開發指南.md", "zh-CN": "组件开发指南.md", en: "widget-guide.en.md" }, plugin: { "zh-TW": "插件開發指南.md", "zh-CN": "插件开发指南.md", en: "plugin-guide.en.md" } };

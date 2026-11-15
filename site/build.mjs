@@ -55,4 +55,20 @@ for (const folder of fs.readdirSync(path.join(root, "widgets")).sort()) {
 }
 fs.writeFileSync(path.join(out, "widgets.json"), JSON.stringify(list));
 fs.writeFileSync(path.join(out, ".nojekyll"), "");
+
+// the sitemap: the page in its three languages, for search engines
+const siteUrl = "https://hmgvibe.github.io/FullWidget/";
+const today = new Date().toISOString().slice(0, 10);
+const langs = [["zh-Hant", "zh-TW"], ["zh-Hans", "zh-CN"], ["en", "en"]];
+const alternates = [...langs.map(([hl, l]) => [hl, `${siteUrl}?lang=${l}`]), ["x-default", siteUrl]]
+  .map(([hl, href]) => `    <xhtml:link rel="alternate" hreflang="${hl}" href="${href}"/>`);
+const urls = [siteUrl, ...langs.map(([, l]) => `${siteUrl}?lang=${l}`)]
+  .flatMap((loc) => ["  <url>", `    <loc>${loc}</loc>`, `    <lastmod>${today}</lastmod>`, ...alternates, "  </url>"]);
+fs.writeFileSync(path.join(out, "sitemap.xml"), [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+  ...urls,
+  "</urlset>",
+  "",
+].join("\n"));
 console.log(`FullWidget ${version}: ${list.length} widgets → ${path.relative(root, out)}/`);
