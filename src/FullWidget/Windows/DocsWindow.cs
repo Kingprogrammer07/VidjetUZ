@@ -111,8 +111,9 @@ sealed class DocsWindow : Form
             case "open": // a link to the other guide
                 if (msg.TryGetProperty("href", out var h) && h.GetString() is { } href && Paths.GuideFor(href) is { } other)
                 {
+                    // the other guide comes in the UI language; this one in another language is that file
                     int hash = href.IndexOf('#');
-                    ShowGuide(other, hash >= 0 ? Uri.UnescapeDataString(href[(hash + 1)..]) : null);
+                    ShowGuide(other.Which == Paths.GuideOf(which) ? other.File : other.Which, hash >= 0 ? Uri.UnescapeDataString(href[(hash + 1)..]) : null);
                 }
                 break;
         }

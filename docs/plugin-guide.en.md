@@ -4,6 +4,8 @@ A plugin is a small program you write for yourself, so the widgets you write can
 
 This guide is complete on purpose: you can hand it to an AI and have it write the plugin and the widget that uses it.
 
+中文：[插件開發指南](插件開發指南.md)（繁體）　·　[插件开发指南](插件开发指南.md)（简体）
+
 - [Let an AI do it](#let-an-ai-do-it)
 - [What a plugin is](#what-a-plugin-is)
 - [Try one in five minutes](#try-one-in-five-minutes)

@@ -814,7 +814,7 @@ sealed class App : ApplicationContext
     /// A developer guide ("widget" or "plugin"), in its own window.
     public void OpenDeveloperGuide(string which = "widget")
     {
-        if (which != "plugin") which = "widget";
+        if (which != "plugin") which = "widget"; // a guide's file by name comes only from links in the guide window
         if (!File.Exists(Paths.Guide(which))) throw new BridgeException(Strings.GuideMissing);
         if (docs == null || docs.IsDisposed)
         {

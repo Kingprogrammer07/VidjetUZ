@@ -27,26 +27,38 @@ static class Paths
     public static string MenuDir => Path.Combine(ResourceRoot, "ui", "menu");
     public static string DocsUiDir => Path.Combine(ResourceRoot, "ui", "docs");
     public static string TemplatesDir => Path.Combine(ResourceRoot, "templates");
-    /// A developer guide in the UI language (Chinese readers share the Traditional Chinese one):
-    /// "widget" (writing widgets) or "plugin" (writing plugins).
+    /// The guides, each in Traditional Chinese, Simplified Chinese (when there is one) and English.
+    static readonly Dictionary<string, (string Tw, string? Cn, string En)> Guides = new()
+    {
+        ["widget"] = ("組件開發指南.md", null, "widget-guide.en.md"),
+        ["plugin"] = ("插件開發指南.md", "插件开发指南.md", "plugin-guide.en.md"),
+    };
+
+    /// A developer guide: "widget" (writing widgets) or "plugin" (writing plugins) in the UI
+    /// language, Simplified Chinese readers getting the Traditional Chinese one where there is no
+    /// other; or one of the guides' files by name (a link from one guide to another).
     public static string Guide(string which)
     {
-        var (zh, en) = which == "plugin" ? ("插件開發指南.md", "plugin-guide.en.md") : ("組件開發指南.md", "widget-guide.en.md");
-        string english = Path.Combine(ResourceRoot, "docs", en);
-        return Shell.Strings.Lang == "en" && File.Exists(english) ? english : Path.Combine(ResourceRoot, "docs", zh);
+        string docs = Path.Combine(ResourceRoot, "docs");
+        if (which.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) return Path.Combine(docs, which);
+        var g = Guides.TryGetValue(which, out var x) ? x : Guides["widget"];
+        string? pick = Shell.Strings.Lang switch { "en" => g.En, "zh-CN" => g.Cn, _ => null };
+        return pick != null && File.Exists(Path.Combine(docs, pick)) ? Path.Combine(docs, pick) : Path.Combine(docs, g.Tw);
     }
 
-    /// Which guide a link names: "插件開發指南.md", "plugin-guide.en.md#…" → "plugin"; null for other files.
-    public static string? GuideFor(string link)
+    /// The guide a link names ("插件開發指南.md", "plugin-guide.en.md#…"): which guide, and its file
+    /// name; null for other files.
+    public static (string Which, string File)? GuideFor(string link)
     {
         string file = Path.GetFileName(Uri.UnescapeDataString(link.Split('#', '?')[0]));
-        return file switch
-        {
-            "插件開發指南.md" or "plugin-guide.en.md" => "plugin",
-            "組件開發指南.md" or "widget-guide.en.md" => "widget",
-            _ => null,
-        };
+        foreach (var (which, g) in Guides)
+            if (file == g.Tw || file == g.Cn || file == g.En) return (which, file);
+        return null;
     }
+
+    /// Which guide a file is ("plugin" for 插件开发指南.md…), or the name itself.
+    public static string GuideOf(string which) =>
+        Guides.FirstOrDefault(kv => which == kv.Key || which == kv.Value.Tw || which == kv.Value.Cn || which == kv.Value.En).Key ?? which;
 
     /// Where packages are unpacked before the user says yes. Inside the widgets folder, so the
     /// final move stays on one drive; the leading dot keeps the catalog from scanning it.

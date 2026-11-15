@@ -41,6 +41,7 @@
     <None Include="..\..\docs\組件開發指南.md" Link="docs\組件開發指南.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\widget-guide.en.md" Link="docs\widget-guide.en.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\插件開發指南.md" Link="docs\插件開發指南.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\docs\插件开发指南.md" Link="docs\插件开发指南.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\plugin-guide.en.md" Link="docs\plugin-guide.en.md" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
