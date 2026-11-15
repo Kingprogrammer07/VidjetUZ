@@ -646,7 +646,8 @@ The widget market has an Official plugins section with FullWidget's own plugins 
 
 | Official plugin | Provides |
 |---|---|
-| `fullwidget.perf` Performance data | A `stats` event every second: GPU load, video memory, temperature, power and clock, and the frame rate of the game in front. Methods: `stats`, `info`, `enableFps`. See its [README](https://github.com/hmgvibe/fullwidget-market/tree/main/plugins/fullwidget.perf) |
+| `fullwidget.perf` Performance data | A `stats` event every second: GPU load, video memory, temperature, power and clock, and the frame rate of each program drawing frames. Methods: `stats`, `info`, `enableFps`. See its [README](https://github.com/hmgvibe/fullwidget-market/tree/main/plugins/fullwidget.perf) |
+| `fullwidget.files` Files | Once the user picks a folder in the plugin's own picker: its files with their icons; open, show in Explorer, drag out, take files in, rename, new folder, to the Recycle Bin, and a `changed` event when something changes. Only folders the user picked. See its [README](https://github.com/hmgvibe/fullwidget-market/tree/main/plugins/fullwidget.files) |
 
 ---
 
