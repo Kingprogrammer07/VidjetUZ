@@ -30,7 +30,7 @@ static class Paths
     /// The guides, each in Traditional Chinese, Simplified Chinese (when there is one) and English.
     static readonly Dictionary<string, (string Tw, string? Cn, string En)> Guides = new()
     {
-        ["widget"] = ("組件開發指南.md", null, "widget-guide.en.md"),
+        ["widget"] = ("組件開發指南.md", "组件开发指南.md", "widget-guide.en.md"),
         ["plugin"] = ("插件開發指南.md", "插件开发指南.md", "plugin-guide.en.md"),
     };
 

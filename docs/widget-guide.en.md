@@ -2,6 +2,8 @@
 
 A widget is a folder: a `widget.json` file plus ordinary HTML, CSS and JavaScript. If you can build a web page, you can build a widget.
 
+中文：[組件開發指南](組件開發指南.md)（繁體）　·　[组件开发指南](组件开发指南.md)（简体）
+
 - [Your first widget in ten minutes](#your-first-widget-in-ten-minutes)
 - [What's in the folder](#whats-in-the-folder)
 - [widget.json](#widgetjson)
