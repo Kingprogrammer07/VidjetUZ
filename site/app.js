@@ -64,7 +64,7 @@
       ext3Title: "分享出去，或装别人的",
       ext3Text: "打包成 .fwz 文件发给朋友，双击就能安装；或投稿到组件市场，大家在控制中心“添加组件 → 在线”点一下就装，出了新版本会提醒。",
       ext3Perm: "别人写的组件，安装前会列出它要连哪些网站、用哪些系统功能，你同意才装。组件之间互相隔离。",
-      marketTitle: "组件市场上现在有 {n} 个组件", marketLink: "打开组件市场 ↗", marketBy: "作者",
+      marketLink: "打开组件市场 ↗",
       getSub: "免费。下载安装程序，装好就能用。", getBtn: "下载 FullWidget",
       filesHead: "下载页上有三个文件，选一个就好：", file1: "安装程序，推荐。可以创建桌面快捷方式、设置开机启动。",
       file2: "免安装，解压就能用，也能放进 U 盘带着走。",
@@ -126,7 +126,7 @@
       ext3Title: "Share yours, install others'",
       ext3Text: "Pack a widget as a .fwz file for a friend to double-click, or submit it to the widget market, where anyone installs it with a click under Add widgets → Online and hears when there's a new version.",
       ext3Perm: "Before you install someone else's widget, you see every site it connects to and every system feature it uses; it installs only if you agree. Widgets are kept apart from each other.",
-      marketTitle: "{n} widgets on the widget market now", marketLink: "Open the widget market ↗", marketBy: "by",
+      marketLink: "Open the widget market ↗",
       getSub: "Free. Download the installer and you're set.", getBtn: "Download FullWidget",
       filesHead: "The download page has three files. Pick one:", file1: "The installer. Recommended; it can add a desktop shortcut and start with Windows.",
       file2: "No install: unzip and run, even from a USB stick.",
@@ -146,7 +146,7 @@
   original._title = document.title;
   original._desc = $('meta[name="description"]').content;
   original.flowPause = "暫停"; original.flowPlay = "繼續";
-  Object.assign(original, { snip1: "// 執行一段 PowerShell，把結果放到組件上", snip2: "// 接上插件：官方的「性能數據」", marketBy: "作者", marketTitle: "組件市場上現在有 {n} 個組件" });
+  Object.assign(original, { snip1: "// 執行一段 PowerShell，把結果放到組件上", snip2: "// 接上插件：官方的「性能數據」", marketTitle: "組件市場上現在有 {n} 個組件" });
   Object.assign(original, { catAll: "全部", catTime: "時間", catWeather: "天氣", catSystem: "系統", catProductivity: "效率", catInfo: "資訊", catMedia: "媒體與裝飾" });
   original.copied = "已複製下載連結。FullWidget 是 Windows 電腦軟件，請在電腦上打開。";
 
@@ -179,7 +179,6 @@
     for (const b of $$(".langs button")) b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     const GUIDES = { widget: { "zh-TW": "組件開發指南.md", "zh-CN": "组件开发指南.md", en: "widget-guide.en.md" }, plugin: { "zh-TW": "插件開發指南.md", "zh-CN": "插件开发指南.md", en: "plugin-guide.en.md" } };
     for (const a of $$("[data-guide]")) a.href = a.href.replace(/docs\/.*$/, "docs/" + GUIDES[a.dataset.guide][lang]);
-    marketLang();
     for (const img of $$("img[data-w]")) img.src = pic(img.dataset.w, img.dataset.t);
     for (const img of $$("img[data-app]")) img.src = `assets/app/${img.dataset.app}.${lang}.webp`;
     for (const fig of $$(".tile")) { const img = $("img", fig); img.src = pic(fig.dataset.folder, fig.dataset.theme); $("figcaption", fig).textContent = name(fig.dataset.folder); img.alt = name(fig.dataset.folder); }
@@ -450,42 +449,6 @@
     codeLang();
   });
 
-  // ───────────────────────── ③ what's on the widget market, read live ─────────────────────────
-  const MARKET = "https://hmgvibe.github.io/fullwidget-market/";
-  const CAT_WALL = { time: 0, weather: 2, system: 5, productivity: 3, info: 1, media: 4 };
-  let market = null, marketCount = 0;
-  function marketLang() {
-    if (!market) return;
-    $("#marketTitle").textContent = tr("marketTitle").replace("{n}", marketCount);
-    const grid = $("#marketGrid");
-    grid.innerHTML = "";
-    for (const w of market) {
-      const li = document.createElement("li");
-      const box = document.createElement("div");
-      box.className = `w-pic wp${CAT_WALL[w.category] ?? 5}`;
-      const img = document.createElement("img");
-      img.loading = "lazy"; img.decoding = "async"; img.alt = "";
-      img.src = MARKET + (w.preview ? w.preview.replace("{theme}", "instrument").replace("{lang}", lang) : w.icon);
-      if (!w.preview) img.className = "icon";
-      box.append(img);
-      const h = document.createElement("h4");
-      h.textContent = (w.name && (w.name[lang] || w.name.en)) || w.id;
-      const by = document.createElement("p");
-      by.textContent = `${tr("marketBy")} ${w.author}`;
-      li.append(box, h, by);
-      grid.append(li);
-    }
-  }
-  fetch(MARKET + "index.json").then((r) => r.json()).then((j) => {
-    // other people's widgets first (it's their market too), then the newest; a few at most
-    const own = (w) => (w.author === "hmgvibe" ? 1 : 0);
-    const all = j.widgets || [];
-    marketCount = all.length;
-    market = [...all].sort((a, b) => own(a) - own(b) || !a.preview - !b.preview || String(b.updated).localeCompare(String(a.updated))).slice(0, 8);
-    if (!market.length) return;
-    marketLang();
-    $("#market").hidden = false;
-  }).catch(() => { /* offline: the section simply has no list */ });
 
   const mix = (a, b, t) => { const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)); const x = p(a), y = p(b); return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
   let progress = 0, lastStage = "";
