@@ -418,7 +418,7 @@ sealed class WidgetWindow : NativeWindow
         {
             SetWindowPos(Handle, HWND_NOTOPMOST, 0, 0, 0, 0, keep);
             SetWindowLongPtr(Handle, GWLP_HWNDPARENT, FindWindow("Progman", null));
-            PlaceAboveDesktop();
+            SettleDesktopLayer();
         }
         else
         {
@@ -441,7 +441,31 @@ sealed class WidgetWindow : NativeWindow
     void ShowNoActivate()
     {
         ShowWindow(Handle, SW_SHOWNOACTIVATE);
-        if (DesktopLayer && !peeking) PlaceAboveDesktop();
+        if (DesktopLayer && !peeking) SettleDesktopLayer();
+    }
+
+    /// Where a desktop-layer widget goes: just above the desktop; or, while Show desktop has
+    /// brought the desktop in front of everything (Win+D), on top, so it isn't left under it.
+    public void SettleDesktopLayer()
+    {
+        if (closing || peeking || !DesktopLayer || Handle == IntPtr.Zero) return;
+        if (app.DesktopShown)
+        {
+            // An owned window can't rise above its owner's place, and Progman stays at the bottom:
+            // let go of it while the desktop is in front.
+            // Windows keeps a background program's windows under the focused one, here the
+            // desktop: so always on top, until an app has the focus again (the next branch).
+            SetWindowLongPtr(Handle, GWLP_HWNDPARENT, IntPtr.Zero);
+            SetWindowPos(Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        }
+        else
+        {
+            if ((GetWindowLongPtr(Handle, GWL_EXSTYLE).ToInt64() & WS_EX_TOPMOST) != 0)
+                SetWindowPos(Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+            var progman = FindWindow("Progman", null);
+            if (GetWindow(Handle, GW_OWNER) != progman) SetWindowLongPtr(Handle, GWLP_HWNDPARENT, progman);
+            PlaceAboveDesktop();
+        }
     }
 
     bool userHidden, paused;
@@ -576,7 +600,7 @@ sealed class WidgetWindow : NativeWindow
                 if (peeking && (m.WParam.ToInt64() & 0xFFFF) == WA_INACTIVE)
                     app.Post(() => Peek(false)); // another window was used: back to its layer
                 else if (DesktopLayer && !peeking && (m.WParam.ToInt64() & 0xFFFF) != WA_INACTIVE)
-                    app.Post(() => { if (!closing && DesktopLayer && !peeking) PlaceAboveDesktop(); });
+                    app.Post(SettleDesktopLayer);
                 break;
 
             case WM_GETMINMAXINFO:

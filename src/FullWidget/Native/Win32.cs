@@ -42,7 +42,7 @@ internal static class Win32
     public static readonly IntPtr HWND_TOP = IntPtr.Zero;
     public static readonly IntPtr HWND_TOPMOST = new(-1);
     public static readonly IntPtr HWND_NOTOPMOST = new(-2);
-    public const uint GW_HWNDPREV = 3;
+    public const uint GW_HWNDPREV = 3, GW_OWNER = 4;
 
     public const int SW_HIDE = 0, SW_SHOWNOACTIVATE = 4;
     public const int LWA_ALPHA = 0x2;

@@ -66,7 +66,12 @@ sealed class App : ApplicationContext
         SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
         marginWatch.Tick += (_, _) => WatchMargins();
         marginWatch.Start();
-        fullscreenWatch.Tick += (_, _) => WatchFullscreen();
+        showDesktop = new Shell.ShowDesktop(shown =>
+        {
+            Log.Info(shown ? "Show desktop: widgets on top" : "Show desktop over: widgets back above the desktop");
+            foreach (var w in windows.Values) w.SettleDesktopLayer();
+        });
+        fullscreenWatch.Tick += (_, _) => { WatchFullscreen(); showDesktop.Check(); };
         fullscreenWatch.Start();
         _ = StartAsync(startupCommand);
     }
@@ -95,6 +100,10 @@ sealed class App : ApplicationContext
     // A game, video or slideshow filling a monitor: widgets there would either sit on top of it
     // (top layer) or keep drawing unseen underneath. Either way they hide and stop until it ends.
     readonly System.Windows.Forms.Timer fullscreenWatch = new() { Interval = 1500 };
+    Shell.ShowDesktop? showDesktop;
+
+    /// Show desktop (Win+D) has the desktop in front of every app: desktop-layer widgets go on top.
+    public bool DesktopShown => showDesktop?.Shown == true;
     Rectangle? fullscreen;
     static readonly HashSet<string> ShellClasses = new() { "Progman", "WorkerW", "Shell_TrayWnd", "Shell_SecondaryTrayWnd" };
 
@@ -1048,6 +1057,7 @@ sealed class App : ApplicationContext
         Log.Info("Exiting");
         marginWatch.Stop();
         fullscreenWatch.Stop();
+        showDesktop?.Dispose();
         StopHotReload();
         foreach (var p in pendingPackages.Values) Packages.Cancel(p);
         menu?.Dispose();
