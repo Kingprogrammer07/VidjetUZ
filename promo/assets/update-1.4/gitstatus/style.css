@@ -1,0 +1,12 @@
+main { height: 100%; display: flex; flex-direction: column; gap: 0.55rem; }
+header { display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem; }
+header svg { width: 1.15rem; height: 1.15rem; fill: none; stroke: var(--w-accent); stroke-width: 1.6; stroke-linecap: round; }
+header b { font-weight: 600; }
+.br { margin-left: auto; font-size: 0.8rem; padding: 0.1rem 0.55rem; border-radius: 99px; background: color-mix(in srgb, var(--w-accent) 18%, transparent); color: var(--w-accent); }
+ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.32rem; flex: 1; align-content: start; }
+li span { overflow: hidden; text-overflow: ellipsis; }
+li { display: flex; gap: 0.6rem; align-items: baseline; font-family: var(--w-font-num); font-size: 0.86rem; white-space: nowrap; overflow: hidden; }
+li i { flex: none; font-style: normal; font-weight: 700; width: 1.4em; color: var(--w-fg-muted); }
+li i.k-M { color: var(--w-warn); }
+li i.k-A, li i.k-new { color: var(--w-accent); }
+footer { font-size: 0.78rem; }

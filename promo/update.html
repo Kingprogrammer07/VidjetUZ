@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FullWidget 1.3 更新介绍</title>
+  <!-- The 1.3 update video (Simplified Chinese, 48 s). A calm "what's new" format: one feature per
+       chapter, the same layout each time. Same player and recorder as the promo:
+         node promo/render.mjs --serve   → http://127.0.0.1:8080/promo/update.html
+         node promo/render.mjs --page update.html --lang zh-CN --to 48 --out promo/out/FullWidget-1.3-update.mp4 -->
+  <link rel="stylesheet" href="update.css">
+</head>
+<body>
+  <div id="viewport"><div id="stage"></div></div>
+  <div id="bar">
+    <button id="play" type="button">暫停</button>
+    <div class="track" id="track"><div class="rail"></div><div class="fill" id="fill"></div></div>
+    <span id="time">0.00 s</span>
+  </div>
+  <script>window.__errs = []; addEventListener("error", (e) => window.__errs.push(`${e.message} (${(e.filename || "").split("/").pop()}:${e.lineno})`));</script>
+  <script>window.COPY = { lang: "zh-CN", media: { title: "晴天的海边", artist: "林间小路", album: "夏日记事" }, device: "扬声器" };</script>
+  <script src="../site/widget-host.js"></script>
+  <script src="live.js"></script>
+  <script src="engine.js"></script>
+  <script src="update-scenes.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

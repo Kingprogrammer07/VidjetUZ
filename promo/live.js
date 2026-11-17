@@ -56,10 +56,12 @@ now=Math.max(now,to);for(var k=0;k<3;k++){var r=raf;raf=[];if(!r.length)break;r.
   /**
    * A live widget in `frame`. options: folder, theme, locale, settings, storage, script (run once
    * mounted), t0 (video time its clock starts moving), speed (virtual seconds per second),
-   * actions: [[videoTime, (win, doc) => …]] (clicks, typing), mediaTitle.
+   * actions: [[videoTime, (win, doc) => …]] (clicks, typing), mediaTitle, lyrics (timed lines for the media widget),
+   * shell (p) => stdout for widget.shell.run/exec, plugin (vt) => what a plugin's "stats" event says, once a second.
    */
   async function mount(frame, o) {
-    const w = { frame, o, host: null, vt: BASE, sysOn: false, sysSec: -1 };
+    const w = { frame, o, host: null, vt: BASE, sysOn: false, sysSec: -1, plugins: new Set(), plugSec: -1 };
+    const run = (p) => ({ code: 0, ok: true, stdout: o.shell ? o.shell(p) : "", stderr: "", timedOut: false, truncated: false });
     const vtAt = (t) => BASE + Math.max(0, t - (o.t0 || 0)) * 1000 * (o.speed || 1);
     w.host = await FWHost.mount(frame, {
       folder: o.folder, root: "../", locale: o.locale || COPY.lang, theme: o.theme || "instrument", head: RUNTIME,
@@ -71,11 +73,22 @@ now=Math.max(now,to);for(var k=0;k<3;k++){var r=raf;raf=[];if(!r.length)break;r.
         "media.subscribe": () => MEDIA(w.vt, o.mediaTitle),
         "media.get": () => MEDIA(w.vt, o.mediaTitle),
         "media.unsubscribe": () => null,
+        // a shot's own lyrics (o.lyrics: [{ t, text, tr? }]); none otherwise
+        "media.lyrics": () => {
+          const m = MEDIA(w.vt, o.mediaTitle);
+          return { title: m.title, artist: m.artist, duration: m.duration, lyrics: o.lyrics ? { found: true, source: "qqmusic", lines: o.lyrics } : { found: false } };
+        },
         "media.control": () => null,
         "notify.show": () => null,
         "notify.cancel": () => null,
         "audio.get": () => ({ available: true, volume: 46, muted: false, device: COPY.device }),
         "audio.subscribe": () => ({ available: true, volume: 46, muted: false, device: COPY.device }),
+        "shell.run": run,
+        "shell.exec": run,
+        // a made-up plugin: its stats now, and an event every second while the widget listens
+        "plugin.listen": (p) => { w.plugins.add(p.plugin); return null; },
+        "plugin.unlisten": (p) => { w.plugins.delete(p.plugin); return null; },
+        "plugin.call": () => (o.plugin ? o.plugin(w.vt) : null),
       },
     });
     const win = frame.contentWindow;
@@ -86,6 +99,10 @@ now=Math.max(now,to);for(var k=0;k<3;k++){var r=raf;raf=[];if(!r.length)break;r.
       if (vt < w.vt) return; // the preview went back in time; the widget keeps where it was
       w.vt = vt;
       if (w.sysOn && Math.floor(vt / 1000) !== w.sysSec) { w.sysSec = Math.floor(vt / 1000); w.host.send("system", sys(vt)); }
+      if (o.plugin && w.plugins.size && Math.floor(vt / 1000) !== w.plugSec) {
+        w.plugSec = Math.floor(vt / 1000);
+        for (const name of w.plugins) w.host.send("plugin", { plugin: name, event: "stats", data: o.plugin(vt) });
+      }
       win.__fwAdvance(vt);
     };
     w.setTheme = (th) => w.host.setTheme(th);

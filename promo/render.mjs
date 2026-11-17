@@ -6,7 +6,8 @@
 //   node promo/render.mjs --sheet 0:60:0.5        a contact sheet, one small frame every 0.5 s → promo/out/sheet-<lang>-*.png
 //   node promo/render.mjs --serve                 just serve the page: http://127.0.0.1:8080/promo/index.html
 //   node promo/render.mjs --covers               the video cover, 16:9 and 4:3 × three languages → promo/out/cover-<16x9|4x3>.<lang>.jpg
-//   node promo/render.mjs --assets                the 9:41 clock at 2×, each theme and language (promo/assets/clock-0941.*.png)
+//   node promo/render.mjs --cover update-1.4.html --lang zh-CN   an update's cover, 16:9 and 4:3 → promo/out/update-1.4-cover-<ar>.zh-CN.jpg
+//   node promo/render.mjs --assets               the 9:41 clock at 2×, each theme and language (promo/assets/clock-0941.*.png)
 //   options: --page other.html (another page with the same PROMO API)  --fps 60  --workers 4  --from 0 --to 74 (part of the video)  --out file.mp4
 //
 // Every frame is drawn from its time alone (PROMO.seek(t)), so recording is exact and repeatable.
@@ -138,6 +139,17 @@ try {
       const b = await openBrowser(port++, `http://127.0.0.1:${server.address().port}/promo/cover.html?ar=${ar}&lang=${lang}`, "PROMO_ASSET");
       const r = await b.send("Page.captureScreenshot", { format: "jpeg", quality: 92, fromSurface: true, clip: { x: 0, y: 0, width, height: 1080, scale: 1 } });
       const file = path.join(outDir, `cover-${ar}.${lang}.jpg`);
+      fs.writeFileSync(file, Buffer.from(r.data, "base64"));
+      console.log(path.relative(root, file), `${(fs.statSync(file).size / 1024).toFixed(0)} KB`);
+      await b.close();
+    }
+  } else if (opt("--cover")) {
+    // an update video's cover (e.g. update-1.4.html), 16:9 and 4:3, in --lang → promo/out/<page>-cover-<ar>.<lang>.jpg
+    const page = opt("--cover");
+    for (const [ar, width] of [["16x9", 1920], ["4x3", 1440]]) {
+      const b = await openBrowser(port++, `http://127.0.0.1:${server.address().port}/promo/${page}?ar=${ar}&lang=${LANG}`, "PROMO_ASSET");
+      const r = await b.send("Page.captureScreenshot", { format: "jpeg", quality: 92, fromSurface: true, clip: { x: 0, y: 0, width, height: 1080, scale: 1 } });
+      const file = path.join(outDir, `${page.replace(/\.html$/, "")}-cover-${ar}.${LANG}.jpg`);
       fs.writeFileSync(file, Buffer.from(r.data, "base64"));
       console.log(path.relative(root, file), `${(fs.statSync(file).size / 1024).toFixed(0)} KB`);
       await b.close();

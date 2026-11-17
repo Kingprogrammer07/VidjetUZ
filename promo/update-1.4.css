@@ -1,0 +1,98 @@
+/* The 1.4 update video: what update.css (1.3) has, plus the pieces for commands and plugins. */
+.menu b.hot { background: #b69cff; color: #140f22; box-shadow: none; }
+
+/* code on screen */
+.code { position: absolute; border-radius: 22px; overflow: hidden; background: #0f1217; box-shadow: inset 0 0 0 1px var(--line), 0 40px 80px -40px rgba(0, 0, 0, 0.85); }
+.code-bar { height: 46px; display: flex; align-items: center; gap: 8px; padding: 0 18px; background: rgba(255, 255, 255, 0.04); border-bottom: 1px solid var(--line); }
+.code-bar i { width: 11px; height: 11px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); }
+.code-bar span { margin-left: 10px; font: 600 17px/1 var(--sans); color: var(--muted); }
+.code-body { padding: 18px 0; }
+.ln { display: flex; align-items: baseline; gap: 18px; padding: 3px 22px 3px 0; font: 21px/1.5 var(--mono); white-space: pre; border-left: 4px solid transparent; }
+.ln b { width: 40px; text-align: right; font-weight: 400; color: var(--dim); flex: none; }
+.ln code { font: inherit; color: #d7dde4; }
+.ln.on { background: rgba(255, 255, 255, 0.06); border-left-color: var(--hl, #7de2c4); }
+.ln .k { color: #c792ea; }
+.ln .s { color: #a5e07a; }
+.ln .f { color: #7dc8ff; }
+.ln .o { color: #ffd166; }
+.ln .c { color: #5d6670; font-style: italic; }
+.caret { display: inline-block; width: 3px; height: 1.05em; margin-left: 1px; vertical-align: -0.15em; background: #7de2c4; }
+.stagebox .code .ln { font-size: 19px; }
+/* the two narrow cards side by side (02) */
+.stagebox .code.narrow .ln { font-size: 17px; gap: 12px; padding-right: 10px; }
+.code.narrow .ln b { width: 26px; }
+
+/* the plugin diagram: widget ⇄ FullWidget ⇄ plugin */
+.node { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border-radius: 24px; background: #1b1f26; box-shadow: inset 0 0 0 1.5px var(--line); }
+.node img { width: 46px; height: 46px; }
+.node .ic { width: 50px; height: 50px; display: grid; place-items: center; border-radius: 14px; background: rgba(182, 156, 255, 0.16); color: #b69cff; }
+.node .ic svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.node .ic.wi { background: rgba(125, 226, 196, 0.14); display: flex; flex-direction: column; gap: 5px; padding: 12px; place-items: stretch; }
+.node .ic.wi i { display: block; height: 5px; border-radius: 3px; background: #7de2c4; }
+.node .ic.wi i:nth-child(2) { width: 70%; opacity: 0.6; }
+.node .ic.wi i:nth-child(3) { width: 45%; opacity: 0.4; }
+.node b { font: 600 25px/1 var(--sans); color: var(--fg); }
+.node small { font: 16px/1 var(--mono); color: var(--muted); }
+.node.on { box-shadow: inset 0 0 0 2.5px #b69cff, 0 0 40px -6px rgba(182, 156, 255, 0.55); }
+.wire { position: absolute; border-radius: 2px; background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.35) 0 10px, transparent 10px 18px); transform-origin: 0 50%; }
+.lane { position: absolute; }
+.bubble { position: absolute; top: 4px; font: 600 18px/1 var(--mono); padding: 13px 18px; border-radius: 14px; white-space: nowrap; color: #e9e4ff; background: #2a2340; box-shadow: inset 0 0 0 1.5px rgba(182, 156, 255, 0.45), 0 14px 30px -10px rgba(0, 0, 0, 0.7); }
+.bubble.res { color: #dcfff3; background: #173229; box-shadow: inset 0 0 0 1.5px rgba(125, 226, 196, 0.5), 0 14px 30px -10px rgba(0, 0, 0, 0.7); }
+.bubble.evt { color: #fff3dc; background: #3a2d15; box-shadow: inset 0 0 0 1.5px rgba(242, 180, 92, 0.55), 0 14px 30px -10px rgba(0, 0, 0, 0.7); }
+
+/* managing plugins: the settings slice, a dialog */
+.cc .mono { font: 20px/1 var(--mono); color: var(--muted); white-space: nowrap; }
+.cc .r .btn + .btn { margin-left: -6px; }
+.pdot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 12px; vertical-align: 3px; background: #5d6670; }
+.pdot.run { background: #7de2c4; box-shadow: 0 0 0 5px rgba(125, 226, 196, 0.18); }
+.pdot.wait { background: #ffb547; }
+.dialog { position: absolute; border-radius: 26px; padding: 34px 38px; background: #20252d; box-shadow: inset 0 0 0 1px var(--line), 0 50px 100px -30px rgba(0, 0, 0, 0.9); z-index: 4; }
+.dialog .dh { display: flex; gap: 18px; align-items: center; }
+.dialog .warn { width: 56px; height: 56px; flex: none; border-radius: 16px; display: grid; place-items: center; background: rgba(255, 181, 71, 0.16); color: #ffb547; font: 800 30px/1 var(--sans); }
+.dialog .dh b { display: block; font: 700 30px/1.2 var(--sans); }
+.dialog .dh small { display: block; font: 16px/1.4 var(--mono); color: var(--muted); margin-top: 4px; }
+.dialog p { margin: 22px 0 0; font: 23px/1.55 var(--sans); color: var(--muted); }
+.dialog pre { margin: 14px 0 0; padding: 14px 18px; border-radius: 12px; background: rgba(0, 0, 0, 0.3); font: 22px/1 var(--mono); color: var(--fg); }
+.dialog .df { position: absolute; right: 38px; bottom: 30px; display: flex; gap: 12px; }
+.dialog .btn, .mcard .btn { font: 600 22px/1 var(--sans); padding: 14px 22px; border-radius: 12px; color: var(--fg); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18); white-space: nowrap; }
+.dialog .btn.primary, .mcard .btn.primary { background: #7de2c4; color: #0b1512; box-shadow: none; }
+
+/* official plugins: the market */
+.mhead { position: absolute; display: flex; align-items: baseline; gap: 16px; white-space: nowrap; }
+.mhead b { font: 700 30px/1 var(--sans); }
+.mhead span { font: 20px/1 var(--sans); color: var(--muted); }
+.mcard { position: absolute; display: flex; flex-direction: column; gap: 14px; padding: 26px; border-radius: 24px; background: #1b1f26; box-shadow: inset 0 0 0 1px var(--line), 0 40px 80px -40px rgba(0, 0, 0, 0.8); }
+.mcard .mtop { display: flex; gap: 16px; align-items: center; }
+.mcard .tile { width: 70px; height: 70px; flex: none; border-radius: 18px; display: grid; place-items: center; background: rgba(125, 226, 196, 0.13); color: #7de2c4; }
+.mcard .tile svg { width: 40px; height: 40px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.mcard .mtop b, .mcard .wt { display: block; font: 700 30px/1.2 var(--sans); }
+.mcard small { display: block; font: 18px/1.4 var(--mono); color: var(--muted); }
+.mcard .badge { font: 600 15px/1 var(--sans); font-style: normal; padding: 4px 9px; border-radius: 99px; background: rgba(125, 226, 196, 0.15); color: #7de2c4; margin-right: 6px; }
+.mcard p { margin: 0; font: 21px/1.55 var(--sans); color: var(--muted); }
+.mcard .run { font: 19px/1.4 var(--sans); color: var(--muted); }
+.mcard .run code { font: 18px/1 var(--mono); color: var(--fg); padding: 4px 8px; border-radius: 6px; background: rgba(255, 255, 255, 0.07); }
+.mcard .mfoot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; }
+.mcard .kb { font: 19px/1 var(--mono); color: var(--dim); }
+.mcard .have { font: 600 22px/1 var(--sans); color: #7de2c4; }
+.mcard .thumb { height: 230px; border-radius: 16px; display: grid; place-items: center; background: linear-gradient(160deg, #10263a, #1c4f6e 55%, #3e8fb0); padding: 16px; }
+.mcard .thumb img { max-width: 100%; max-height: 100%; filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.45)); }
+
+/* the game behind the performance monitor */
+.game { position: absolute; border-radius: 26px; overflow: hidden; background: linear-gradient(#120d33 0%, #3b1f62 34%, #b0507a 54%, #f29a5c 62%, #191426 62.2%, #0c0a14 100%); box-shadow: inset 0 0 0 1px var(--line); }
+.game .sun { position: absolute; left: 50%; top: 40%; width: 220px; height: 220px; margin: -110px 0 0 -110px; border-radius: 50%; background: radial-gradient(circle, #ffe2a8 0 45%, rgba(255, 190, 120, 0.5) 46%, transparent 70%); clip-path: inset(0 0 46% 0); }
+.game .hills { position: absolute; left: 0; right: 0; top: 48%; height: 15%; background: #2a1638; clip-path: polygon(0 100%, 0 60%, 12% 30%, 24% 55%, 38% 20%, 50% 50%, 63% 15%, 78% 52%, 90% 28%, 100% 50%, 100% 100%); opacity: 0.9; }
+.game .road { position: absolute; inset: 0; clip-path: polygon(48% 62%, 52% 62%, 96% 100%, 4% 100%); background: linear-gradient(#1c1828, #2a2536); }
+.game .road i { position: absolute; left: 50%; transform: translateX(-50%); background: #f5d68a; border-radius: 2px; }
+
+/* update reminders: a toggle and a Windows notification */
+.cc .tog { --k: 0; width: 64px; height: 36px; border-radius: 99px; background: color-mix(in srgb, #7de2c4 calc(var(--k) * 100%), rgba(255, 255, 255, 0.12)); position: relative; }
+.cc .tog::after { left: calc(5px + var(--k) * 28px); top: 5px; width: 26px; height: 26px; background: color-mix(in srgb, #0b1512 calc(var(--k) * 100%), #9aa3ad); }
+.minidesk { position: absolute; border-radius: 24px; overflow: hidden; background: radial-gradient(70% 60% at 80% 100%, rgba(125, 226, 196, 0.22), transparent 70%), linear-gradient(160deg, #10263a, #1c4f6e 55%, #3e8fb0); box-shadow: inset 0 0 0 1px var(--line); }
+.wtoast { position: absolute; padding: 20px 24px; border-radius: 16px; background: #2b2f36; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 30px 60px -20px rgba(0, 0, 0, 0.8); }
+.wtoast .th { display: flex; align-items: center; gap: 10px; font: 18px/1 var(--sans); color: var(--muted); margin-bottom: 16px; }
+.wtoast .th img { width: 22px; height: 22px; }
+.wtoast .th i { margin-left: auto; font-style: normal; font-size: 22px; }
+.wtoast b { font: 600 24px/1.45 var(--sans); color: var(--fg); }
+.taskbar { position: absolute; background: rgba(20, 22, 28, 0.85); backdrop-filter: blur(10px); display: flex; justify-content: flex-end; align-items: center; padding: 0 20px; }
+.taskbar .tray { display: flex; align-items: center; gap: 14px; font: 17px/1 var(--sans); color: var(--fg); }
+.taskbar .tray img { width: 22px; height: 22px; }

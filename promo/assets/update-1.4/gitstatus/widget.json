@@ -1,0 +1,9 @@
+{
+  "id": "user.gitstatus",
+  "name": "Git 状态",
+  "version": "1.0.0",
+  "entry": "index.html",
+  "size": { "width": 260, "height": 150, "grow": 1 },
+  "permissions": ["shell.run"],
+  "settings": [{ "key": "repo", "type": "text", "label": "仓库", "default": "D:\\code\\FullWidget" }]
+}
