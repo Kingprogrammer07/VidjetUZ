@@ -89,6 +89,13 @@ static class Paths
             DataDir = Path.GetFullPath(overrideDir);
             LocalDir = Path.Combine(DataDir, "local");
         }
+        else if (Shell.StorePackage.IsPackaged)
+        {
+            // The Store copy: inside the package's folder (see Shell/StorePackage.cs).
+            DataDir = Path.Combine(Shell.StorePackage.Roaming, "FullWidget");
+            LocalDir = Path.Combine(Shell.StorePackage.Local, "FullWidget");
+            Shell.StorePackage.CopyFrom(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FullWidget"), DataDir);
+        }
         else if (File.Exists(Path.Combine(AppContext.BaseDirectory, "portable")) || File.Exists(Path.Combine(AppContext.BaseDirectory, "portable.txt")))
         {
             // Portable mode: an empty file named "portable" next to the exe keeps all data in .\data.

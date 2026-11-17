@@ -19,6 +19,7 @@ static class FileAssociation
     /// Whether .fwz files currently open with this copy of FullWidget (and this data folder).
     public static bool IsRegistered(string? dataDirArg)
     {
+        if (StorePackage.IsPackaged) return true; // the package declares the file type
         using var ext = Registry.CurrentUser.OpenSubKey(Classes + Packages.Extension);
         using var cmd = Registry.CurrentUser.OpenSubKey(Classes + ProgId + @"\shell\open\command");
         return ext?.GetValue(null) as string == ProgId && cmd?.GetValue(null) as string == Command(dataDirArg);
@@ -26,6 +27,7 @@ static class FileAssociation
 
     public static void Register(string? dataDirArg)
     {
+        if (StorePackage.IsPackaged) return;
         if (IsRegistered(dataDirArg)) return;
         try
         {
@@ -53,6 +55,7 @@ static class FileAssociation
     /// Removes the association, but only if it still points to FullWidget.
     public static void Unregister()
     {
+        if (StorePackage.IsPackaged) return;
         try
         {
             // only if the file type opens this copy: another copy (another folder) keeps its own

@@ -638,8 +638,10 @@ function pageSettings() {
       <section class="panel" style="--i:0"><div class="form">
         <div class="group-title">${t("一般")}</div>
         ${row("語言", "介面、組件裏的文字和日期格式。", control({ key: "language", type: "select", options: langs }, S.language, "app"), { key: "lang" })}
-        ${row("開機自動啟動", "登入 Windows 後自動打開 FullWidget。", control({ key: "autostart", type: "toggle", label: "開機自動啟動" }, S.autostart, "app"), { key: "auto" })}
-        ${row("雙擊 .fwz 安裝", "讓 Windows 用 FullWidget 打開下載的組件檔案。", control({ key: "fileAssociation", type: "toggle", label: "雙擊 .fwz 安裝" }, S.fileAssociation, "app"), { key: "assoc" })}
+        ${S.autostartBlocked
+          ? row("開機自動啟動", "已在 Windows 的「啟動」設定裏關掉，要到那裏打開。", `<button class="btn small" data-action="startupSettings">${t("打開設定")}</button>`, { key: "auto" })
+          : row("開機自動啟動", "登入 Windows 後自動打開 FullWidget。", control({ key: "autostart", type: "toggle", label: "開機自動啟動" }, S.autostart, "app"), { key: "auto" })}
+        ${S.store ? "" : row("雙擊 .fwz 安裝", "讓 Windows 用 FullWidget 打開下載的組件檔案。", control({ key: "fileAssociation", type: "toggle", label: "雙擊 .fwz 安裝" }, S.fileAssociation, "app"), { key: "assoc" })}
         <div class="group-title">${t("桌面")}</div>
         ${row("隱藏全部組件", "暫時收起所有組件；它們會停止更新，不佔用處理器。", control({ key: "hideAll", type: "toggle", label: "隱藏全部組件" }, S.hideAll, "app"), { key: "hide" })}
         ${row("鎖定位置", "一次鎖定或解鎖所有組件。", `<button class="btn" data-action="lockAll" data-on="true">${t("全部鎖定")}</button><button class="btn quiet" data-action="lockAll" data-on="false">${t("全部解鎖")}</button>`, { key: "lock" })}
@@ -660,7 +662,7 @@ function pageSettings() {
         ${pluginRows()}
         <div class="group-title">${t("關於")}</div>
         ${row("版本", updateNote(), updateCtl(), { key: "ver" })}
-        ${row("自動檢查更新", "每天看一兩次有沒有新版本，有的話在托盤提示。只連 GitHub，不會自己安裝。", control({ key: "updateAuto", type: "toggle", label: "自動檢查更新" }, S.update?.auto === true, "app"), { key: "upd-auto" })}
+        ${S.store ? "" : row("自動檢查更新", "每天看一兩次有沒有新版本，有的話在托盤提示。只連 GitHub，不會自己安裝。", control({ key: "updateAuto", type: "toggle", label: "自動檢查更新" }, S.update?.auto === true, "app"), { key: "upd-auto" })}
         ${row("組件更新提醒", "每天看一兩次你裝的組件在市場上有沒有新版本，有的話在托盤提示。只連組件市場，不會自己更新。", control({ key: "widgetUpdateAuto", type: "toggle", label: "組件更新提醒" }, S.widgetUpdateAuto === true, "app"), { key: "wupd-auto" })}
       </div></section>
     </div>`;
@@ -747,6 +749,7 @@ const UPDATE_ERRORS = {
 /** The line under "版本": where the update stands. */
 function updateNote() {
   const u = S.update;
+  if (S.store) return t("由 Microsoft Store 更新。");
   if (!u) return "";
   switch (u.status) {
     case "checking": return "正在檢查更新…";
@@ -762,6 +765,7 @@ function updateNote() {
 function updateCtl() {
   const u = S.update || { status: "idle", current: S.version };
   const ver = `<span class="num upd-ver">FullWidget ${esc(S.version)}</span>`;
+  if (S.store) return ver;
   const blocked = u.blocked && (u.status === "available" || u.blocked !== "dev");
   switch (u.status) {
     case "checking":
@@ -1218,6 +1222,7 @@ function onAction(a) {
     case "import": api("package.import"); break;
     case "create": openSheet("create", {}); break;
     case "guide": api("app.guide"); break;
+    case "startupSettings": api("app.startupSettings"); break;
     case "pluginGuide": api("app.guide", { doc: "plugin" }); break;
     case "widgetFolder": api("widget.openFolder", { widget: a.dataset.widget }); break;
     case "export": {

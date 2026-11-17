@@ -300,6 +300,9 @@ const PHRASES = [
   ["和你的插件交換資料；插件本身要另外在「設定 → 插件」裏允許。", "和你的插件交换数据；插件本身要另外在“设置 → 插件”里允许。", "Exchanges data with your plugin; the plugin itself is allowed separately in Settings → Plugins."],
   // ── updates ──
   ["自動檢查更新", "自动检查更新", "Check for updates"],
+  ["由 Microsoft Store 更新。", "由 Microsoft Store 更新。", "Updated by the Microsoft Store."],
+  ["已在 Windows 的「啟動」設定裏關掉，要到那裏打開。", "已在 Windows 的“启动”设置里关闭，需要到那里打开。", "Turned off in Windows' Startup settings; turn it back on there."],
+  ["打開設定", "打开设置", "Open settings"],
   ["每天看一兩次有沒有新版本，有的話在托盤提示。只連 GitHub，不會自己安裝。", "每天看一两次有没有新版本，有的话在托盘提示。只连 GitHub，不会自己安装。", "Looks for a new version once or twice a day and says so from the tray. Only asks GitHub; never installs by itself."],
   ["組件更新提醒", "组件更新提醒", "Widget update reminders"],
   ["每天看一兩次你裝的組件在市場上有沒有新版本，有的話在托盤提示。只連組件市場，不會自己更新。", "每天看一两次你装的组件在市场上有没有新版本，有的话在托盘提示。只连组件市场，不会自己更新。", "Looks in the market once or twice a day for new versions of the widgets you installed and says so from the tray. Only asks the market; never updates by itself."],

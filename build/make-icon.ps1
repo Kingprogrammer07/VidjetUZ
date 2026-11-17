@@ -2,9 +2,11 @@
 # icon size and writes app.ico. Same shapes as build\logo\logo.svg; the small sizes are snapped to
 # whole pixels so they stay sharp in the tray and on the taskbar.
 # Usage: powershell -File build\make-icon.ps1 [output.ico] [-Png folder]
+#        powershell -File build\make-icon.ps1 -Msix folder   (only the MSIX package's logos)
 param(
   [string]$Out = (Join-Path $PSScriptRoot '..\src\FullWidget\app.ico'),
-  [string]$Png = (Join-Path $PSScriptRoot 'logo')
+  [string]$Png = (Join-Path $PSScriptRoot 'logo'),
+  [string]$Msix
 )
 Add-Type -AssemblyName System.Drawing
 
@@ -58,6 +60,38 @@ function Dib-Bytes($bmp) {
   $maskRow = [int]([Math]::Ceiling($n / 32) * 4)
   $w.Write((New-Object byte[] ($maskRow * $n)))   # AND mask: all zero, the alpha channel decides
   $w.Flush(); $ms.ToArray()
+}
+
+# The MSIX package's logos (build\msix): the logo on a transparent canvas, at each scale Windows
+# asks for. Square44x44 is the taskbar and Start icon (its targetsize files fill the whole square);
+# the tiles and splash screen show it smaller in the middle.
+if ($Msix) {
+  New-Item -ItemType Directory -Force $Msix | Out-Null
+  function Put([string]$name, [int]$w, [int]$h, [int]$logo) {
+    $bmp = New-Object System.Drawing.Bitmap $w, $h, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $g = [System.Drawing.Graphics]::FromImage($bmp); $g.Clear([System.Drawing.Color]::Transparent)
+    $l = Draw $logo
+    $g.DrawImageUnscaled($l, [int](($w - $logo) / 2), [int](($h - $logo) / 2))
+    $l.Dispose(); $g.Dispose()
+    $bmp.Save((Join-Path $Msix $name), [System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
+  }
+  foreach ($s in 16, 20, 24, 30, 32, 36, 40, 48, 60, 64, 72, 80, 96, 256) {
+    Put "Square44x44Logo.targetsize-$s.png" $s $s $s
+    Put "Square44x44Logo.targetsize-$($s)_altform-unplated.png" $s $s $s
+    Put "Square44x44Logo.targetsize-$($s)_altform-lightunplated.png" $s $s $s
+  }
+  foreach ($k in @(@(100, 1.0), @(125, 1.25), @(150, 1.5), @(200, 2.0), @(400, 4.0))) {
+    $sc = $k[0]; $f = $k[1]
+    Put "Square44x44Logo.scale-$sc.png" ([int](44 * $f)) ([int](44 * $f)) ([int](44 * $f))
+    Put "StoreLogo.scale-$sc.png" ([int](50 * $f)) ([int](50 * $f)) ([int](50 * $f))
+    Put "Square71x71Logo.scale-$sc.png" ([int](71 * $f)) ([int](71 * $f)) ([int](48 * $f))
+    Put "Square150x150Logo.scale-$sc.png" ([int](150 * $f)) ([int](150 * $f)) ([int](72 * $f))
+    Put "Wide310x150Logo.scale-$sc.png" ([int](310 * $f)) ([int](150 * $f)) ([int](72 * $f))
+    Put "Square310x310Logo.scale-$sc.png" ([int](310 * $f)) ([int](310 * $f)) ([int](144 * $f))
+    Put "SplashScreen.scale-$sc.png" ([int](620 * $f)) ([int](300 * $f)) ([int](120 * $f))
+  }
+  "wrote the MSIX logos to $Msix"
+  return
 }
 
 $sizes = 16, 20, 24, 32, 40, 48, 64, 128, 256

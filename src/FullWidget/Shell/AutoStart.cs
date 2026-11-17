@@ -25,9 +25,10 @@ static class AutoStart
 
     public static bool Enabled
     {
-        get => Current() is string s && s.Equals(Command, StringComparison.OrdinalIgnoreCase);
+        get => StorePackage.IsPackaged ? StorePackage.StartupEnabled : Current() is string s && s.Equals(Command, StringComparison.OrdinalIgnoreCase);
         set
         {
+            if (StorePackage.IsPackaged) { _ = StorePackage.SetStartup(value); return; }
             using var key = Registry.CurrentUser.CreateSubKey(RunKey);
             if (value) key.SetValue(ValueName, Command);
             else key.DeleteValue(ValueName, throwOnMissingValue: false);
@@ -38,6 +39,7 @@ static class AutoStart
     /// moved over to this one, so "start with Windows" keeps working.
     public static void Repair()
     {
+        if (StorePackage.IsPackaged) { _ = StorePackage.RefreshStartup(); return; } // the package has its own
         // Renamed from DeskWidgets: an old entry becomes ours (pointing to this exe).
         using (var key = Registry.CurrentUser.OpenSubKey(RunKey, writable: true))
             if (key?.GetValue(LegacyValueName) is string)

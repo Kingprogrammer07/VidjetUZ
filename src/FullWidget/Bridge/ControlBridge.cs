@@ -32,6 +32,8 @@ sealed class ControlBridge(App app, ControlCenter? window = null)
             plugins = app.Plugins.State(),
             pluginsDir = Plugins.Dir,
             portable = Paths.Portable,
+            store = Shell.StorePackage.IsPackaged,
+            autostartBlocked = Shell.StorePackage.StartupBlocked,
             editMode = app.EditMode,
             dataDir = Paths.DataDir,
             widgetsDir = Paths.UserWidgetsDir,
@@ -250,7 +252,11 @@ sealed class ControlBridge(App app, ControlCenter? window = null)
             case "theme.reset": app.ResetThemeOverrides(); break;
 
             case "app.language": app.SetLanguage(Req(p, "lang")); break;
-            case "app.autostart": AutoStart.Enabled = On(); app.Config.SaveSoon(); break;
+            case "app.autostart":
+                if (Shell.StorePackage.IsPackaged) // Windows switches the startup task: show what it did
+                    return Shell.StorePackage.SetStartup(On()).ContinueWith(_ => { app.Post(app.Config.Notify); return (object?)null; });
+                AutoStart.Enabled = On(); app.Config.SaveSoon(); break;
+            case "app.startupSettings": Process.Start(new ProcessStartInfo("ms-settings:startupapps") { UseShellExecute = true }); break;
             case "app.lowResource": app.SetLowResource(On()); break;
             case "app.restart": app.Post(app.Restart); break;
             case "app.developer": app.SetDeveloperMode(On()); break;

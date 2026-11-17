@@ -995,6 +995,7 @@ sealed class App : ApplicationContext
                 }
                 case "edit": SetEditMode(Arg(1) == "on"); break;
                 case "identify": Target().Identify(); break;
+                case "autostart": AutoStart.Enabled = Arg(1) == "on"; Config.SaveSoon(); break; // for testing (the Store copy switches its startup task)
                 case "dump-state": // for UI development: the control center's state as JSON
                     File.WriteAllText(Arg(1), System.Text.Json.JsonSerializer.Serialize(new ControlBridge(this).State(), Json.Web));
                     break;

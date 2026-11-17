@@ -82,6 +82,7 @@ sealed class Updater
 
     public void Start()
     {
+        if (StorePackage.IsPackaged) return; // the Store updates it
         CleanUp();
         timer.Interval = (int)FirstCheck.TotalMilliseconds;
         timer.Enabled = app.Config.Data.AutoUpdateCheck;
@@ -106,7 +107,7 @@ sealed class Updater
         progress,
         checkedAt = checkedAt is { } c ? new DateTimeOffset(c).ToUnixTimeMilliseconds() : (long?)null,
         auto = app.Config.Data.AutoUpdateCheck,
-        kind = Kind,
+        kind = StorePackage.IsPackaged ? "store" : Kind,
         blocked = Blocked(),
     };
 

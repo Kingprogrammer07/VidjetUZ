@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Microsoft Store package. build\msix\make-msix.ps1 fills in the $…$ values: the identity
+     comes from Partner Center (Product identity), the version from FullWidget.csproj. -->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap desktop rescap">
+
+  <Identity Name="$Name$" Publisher="$Publisher$" Version="$Version$" ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>FullWidget</DisplayName>
+    <PublisherDisplayName>$PublisherName$</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="zh-TW" />
+    <Resource Language="zh-CN" />
+    <Resource Language="en-US" />
+  </Resources>
+
+  <Applications>
+    <Application Id="FullWidget" Executable="FullWidget.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="FullWidget"
+        Description="Desktop widgets for Windows"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\Square71x71Logo.png" Square310x310Logo="Assets\Square310x310Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <!-- "Start with Windows" (Shell/StorePackage.cs); off until the user turns it on -->
+        <desktop:Extension Category="windows.startupTask" Executable="FullWidget.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="FullWidget" Enabled="false" DisplayName="FullWidget" />
+        </desktop:Extension>
+        <!-- double-clicking a widget package installs it -->
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="fwz">
+            <uap:DisplayName>FullWidget widget</uap:DisplayName>
+            <uap:Logo>Assets\StoreLogo.png</uap:Logo>
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="application/zip">.fwz</uap:FileType>
+              <uap:FileType ContentType="application/zip">.dwz</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
