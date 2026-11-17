@@ -6,6 +6,7 @@
 //   node promo/render.mjs --sheet 0:60:0.5        a contact sheet, one small frame every 0.5 s → promo/out/sheet-<lang>-*.png
 //   node promo/render.mjs --serve                 just serve the page: http://127.0.0.1:8080/promo/index.html
 //   node promo/render.mjs --covers               the video cover, 16:9 and 4:3 × three languages → promo/out/cover-<16x9|4x3>.<lang>.jpg
+//   node promo/render.mjs --covers --png --ar 16x9   the same as PNG, only 16:9 → promo/out/cover-16x9.<lang>.png
 //   node promo/render.mjs --cover update-1.4.html --lang zh-CN   an update's cover, 16:9 and 4:3 → promo/out/update-1.4-cover-<ar>.zh-CN.jpg
 //   node promo/render.mjs --assets               the 9:41 clock at 2×, each theme and language (promo/assets/clock-0941.*.png)
 //   options: --page other.html (another page with the same PROMO API)  --fps 60  --workers 4  --from 0 --to 74 (part of the video)  --out file.mp4
@@ -135,10 +136,12 @@ let port = 9400 + Math.floor(Math.random() * 400);
 try {
   if (args.includes("--covers")) {
     // the video cover in 16:9 (1920×1080) and 4:3 (1440×1080), each language, as JPEG (under 2 MB, for YouTube and Bilibili)
-    for (const [ar, width] of [["16x9", 1920], ["4x3", 1440]]) for (const lang of ["zh-TW", "zh-CN", "en"]) {
+    // --png: lossless PNG instead; --ar 16x9: just that shape
+    const png = args.includes("--png");
+    for (const [ar, width] of [["16x9", 1920], ["4x3", 1440]].filter(([a]) => !opt("--ar") || a === opt("--ar"))) for (const lang of ["zh-TW", "zh-CN", "en"]) {
       const b = await openBrowser(port++, `http://127.0.0.1:${server.address().port}/promo/cover.html?ar=${ar}&lang=${lang}`, "PROMO_ASSET");
-      const r = await b.send("Page.captureScreenshot", { format: "jpeg", quality: 92, fromSurface: true, clip: { x: 0, y: 0, width, height: 1080, scale: 1 } });
-      const file = path.join(outDir, `cover-${ar}.${lang}.jpg`);
+      const r = await b.send("Page.captureScreenshot", { ...(png ? { format: "png" } : { format: "jpeg", quality: 92 }), fromSurface: true, clip: { x: 0, y: 0, width, height: 1080, scale: 1 } });
+      const file = path.join(outDir, `cover-${ar}.${lang}.${png ? "png" : "jpg"}`);
       fs.writeFileSync(file, Buffer.from(r.data, "base64"));
       console.log(path.relative(root, file), `${(fs.statSync(file).size / 1024).toFixed(0)} KB`);
       await b.close();

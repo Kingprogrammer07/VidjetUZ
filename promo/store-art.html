@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>FullWidget store art</title>
+  <!-- The Microsoft Store art: the 16:9 super hero art (1920×1080 CSS px at 2× → 3840×2160, no name or
+       text: the Store puts the name and the install button over its lower left), the 9:16 poster (720×1080 CSS px, rendered at 2× → 1440×2160) and
+       the 1:1 box art (1080×1080 at 2× → 2160×2160). store-art.html?ar=hero|poster|box&lang=zh-TW|zh-CN|en,
+       served by `node promo/render.mjs --serve`. The clock is the real widget at 9:41; the others
+       are the site's previews (drawn at 2×, so they stay sharp). -->
+  <link rel="stylesheet" href="promo.css">
+  <style>
+    html, body { margin: 0; overflow: hidden; }
+    #c { position: absolute; left: 0; top: 0; width: 720px; height: 1080px; overflow: hidden;
+      background: radial-gradient(90% 60% at 50% 105%, rgba(125, 226, 196, 0.28), transparent 70%), linear-gradient(165deg, #10192b 0%, #17344f 50%, #2c7590 100%); }
+    .box #c { width: 1080px; height: 1080px; }
+    .hero #c { width: 1920px; height: 1080px; }
+    .hero .brand, .hero .sub { display: none; } /* the Store puts the name over the hero art itself */
+    .box .brand { top: 120px; }
+    .box .sub { top: 232px; }
+    .brand { position: absolute; left: 0; right: 0; top: 96px; display: flex; justify-content: center; align-items: center; gap: 22px; font: 700 76px/1 var(--display); letter-spacing: -0.035em; color: #fff; }
+    .brand img { width: 84px; height: 84px; }
+    .sub { position: absolute; left: 0; right: 0; top: 206px; text-align: center; font: 500 32px/1.2 var(--sans); color: rgba(255, 255, 255, 0.78); }
+    .w { position: absolute; filter: drop-shadow(0 26px 34px rgba(0, 0, 0, 0.45)); }
+    .w iframe { width: 100%; height: 100%; border: 0; background: transparent; color-scheme: dark; display: block; }
+    .w img { width: 100%; height: auto; display: block; }
+  </style>
+</head>
+<body>
+  <div id="c">
+    <div class="brand"><img src="../build/logo/logo.svg" alt="">FullWidget</div>
+    <div class="sub" id="sub"></div>
+  </div>
+  <script>
+    const q = new URLSearchParams(location.search);
+    const lang = q.get("lang") || "zh-TW", ar = q.get("ar") || "poster";
+    document.documentElement.classList.add(ar);
+    document.documentElement.lang = lang;
+    document.getElementById("sub").textContent = { "zh-TW": "Windows 桌面小組件", "zh-CN": "Windows 桌面小组件", en: "Desktop widgets for Windows" }[lang];
+    window.COPY = { lang, media: { title: "", artist: "", album: "" }, device: "" };
+
+    // [widget, left, top, width, rotation]; "clock" is live, the rest are previews
+    const LAYOUT = {
+      poster: [["clock", 110, 300, 500, -2], ["weather", 50, 570, 330, 1.5], ["sysinfo", 390, 560, 290, -1.5], ["media", 170, 820, 380, 1]],
+      hero: [["clock", 820, 110, 620, -2], ["calendar", 1500, 90, 330, 2], ["weather", 620, 470, 420, 1.5], ["sysinfo", 1100, 480, 400, -1.5], ["media", 1340, 800, 470, 1]],
+      box: [["clock", 70, 360, 560, -2], ["weather", 660, 370, 380, 2], ["sysinfo", 90, 690, 380, 1.5], ["media", 510, 740, 480, -1.5]],
+    }[ar];
+    const c = document.getElementById("c");
+    window.LIVE = [];
+    for (const [w, x, y, width, rot] of LAYOUT) {
+      const d = document.createElement("div");
+      d.className = "w";
+      Object.assign(d.style, { left: `${x}px`, top: `${y}px`, width: `${width}px`, transform: `rotate(${rot}deg)` });
+      if (w === "clock") { d.style.height = `${width / 2}px`; d.innerHTML = `<iframe scrolling="no"></iframe>`; LIVE.push(d.firstChild); }
+      else d.innerHTML = `<img src="../site/assets/widgets/${w}/instrument.${lang}.webp">`;
+      c.append(d);
+    }
+  </script>
+  <script src="../site/widget-host.js"></script>
+  <script src="live.js"></script>
+  <script>
+    Promise.all(LIVE.map((f) => Live.mount(f, { folder: "clock", theme: "instrument", locale: lang, t0: 0, settings: { showSeconds: false } })))
+      .then(async (ws) => { for (let t = 0; t <= 1; t += 0.5) { ws.forEach((w) => w.sync(t)); await new Promise((r) => setTimeout(r, 50)); } });
+  </script>
+</body>
+</html>

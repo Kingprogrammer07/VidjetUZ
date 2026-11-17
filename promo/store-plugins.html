@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>FullWidget store screenshot: plugins</title>
+  <!-- A Microsoft Store screenshot (1920×1080): plugins. The real performance monitor widget
+       (market/widgets/hmgvibe.perf-monitor), fed by a made-up "Performance data" plugin, over a game;
+       beside it, the code that uses the plugin and what a plugin can be written in.
+       store-plugins.html?lang=zh-TW|zh-CN|en, served by `node promo/render.mjs --serve`. -->
+  <link rel="stylesheet" href="promo.css">
+  <style>
+    html, body { margin: 0; overflow: hidden; }
+    #c { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden;
+      background: linear-gradient(160deg, #13243a 0%, #1b3f5c 55%, #3b8aa0 100%); }
+    .h { position: absolute; left: 100px; top: 64px; font: 700 92px/1.08 var(--display); letter-spacing: -0.025em; color: #fff; white-space: nowrap; }
+    .s { position: absolute; left: 104px; top: 186px; font: 400 30px/1.3 var(--sans); color: rgba(255, 255, 255, 0.8); white-space: nowrap; }
+
+    /* a game, with the performance monitor over it */
+    .scene { position: absolute; left: 100px; top: 280px; width: 1060px; height: 700px; border-radius: 30px; overflow: hidden;
+      background: linear-gradient(#120d33 0%, #3b1f62 34%, #b0507a 54%, #f29a5c 62%, #191426 62.2%, #0c0a14 100%);
+      box-shadow: 0 40px 70px -30px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08); }
+    .scene .sun { position: absolute; left: 50%; top: 40%; width: 260px; height: 260px; margin: -130px 0 0 -130px; border-radius: 50%; background: radial-gradient(circle, #ffe2a8 0 45%, rgba(255, 190, 120, 0.5) 46%, transparent 70%); clip-path: inset(0 0 46% 0); }
+    .scene .hills { position: absolute; left: 0; right: 0; top: 48%; height: 15%; background: #2a1638; clip-path: polygon(0 100%, 0 60%, 12% 30%, 24% 55%, 38% 20%, 50% 50%, 63% 15%, 78% 52%, 90% 28%, 100% 50%, 100% 100%); opacity: 0.9; }
+    .scene .road { position: absolute; inset: 0; clip-path: polygon(48% 62%, 52% 62%, 96% 100%, 4% 100%); background: linear-gradient(#1c1828, #2a2536); }
+    .scene .road i { position: absolute; left: 50%; transform: translateX(-50%); background: #f5d68a; border-radius: 2px; }
+    .pw { position: absolute; left: 410px; top: 320px; width: 610px; height: 351px; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.55)); }
+    .pw::before { content: ""; position: absolute; inset: 1px; border-radius: 24px; background: #1c2027; }
+    .pw iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: transparent; color-scheme: dark; }
+    .tag { position: absolute; left: 34px; top: 30px; font: 700 28px/1 var(--sans); padding: 13px 24px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22); }
+
+    /* the code, and what plugins are written in */
+    .side { position: absolute; left: 1200px; right: 100px; top: 280px; height: 700px; display: flex; flex-direction: column; gap: 28px; }
+    .snip { padding: 34px 36px; border-radius: 30px; background: #0f1217; box-shadow: 0 40px 70px -30px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      font: 21px/1.8 var(--mono); color: #d7dde4; white-space: pre; }
+    .snip .c { color: #6f7b88; } .snip .kw { color: #c792ea; } .snip .st { color: #a5e07a; } .snip .fn { color: #7dc8ff; }
+    .card { flex: 1; padding: 34px 36px; border-radius: 30px; background: rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); color: #fff; }
+    .card b { display: block; font: 700 32px/1.3 var(--sans); margin-bottom: 22px; }
+    .langs { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 26px; }
+    .langs span { font: 600 24px/1 var(--sans); padding: 12px 20px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); }
+    .card p { margin: 0; font: 400 25px/1.55 var(--sans); color: rgba(255, 255, 255, 0.8); }
+  </style>
+</head>
+<body>
+  <div id="c">
+    <div class="h" id="h"></div>
+    <div class="s" id="s"></div>
+    <div class="scene"><div class="sun"></div><div class="hills"></div><div class="road"><i></i><i></i><i></i><i></i></div>
+      <div class="tag" id="tag"></div>
+      <div class="pw"><iframe id="perf" scrolling="no"></iframe></div>
+    </div>
+    <div class="side">
+      <div class="snip" id="snip"></div>
+      <div class="card"><b id="cardH"></b><div class="langs"><span>Python</span><span>Node.js</span><span>C#</span><span>PowerShell</span><span>Go</span><span>Rust</span></div><p id="cardP"></p></div>
+    </div>
+  </div>
+  <script>
+    const lang = new URLSearchParams(location.search).get("lang") || "zh-TW";
+    const T = {
+      "zh-TW": { h: "接上插件，做到更多。", s: "寫一個小程式，組件就能做 FullWidget 本來做不到的事。", tag: "官方插件 · 性能數據",
+        c: "// 用官方插件「性能數據」", cardH: "插件用什麼語言寫都行", cardP: "一個會讀寫文字的小程式就是插件。開發文檔可以整份交給 AI，說出你想要什麼，讓它幫你寫。" },
+      "zh-CN": { h: "接上插件，做到更多。", s: "写一个小程序，组件就能做 FullWidget 本来做不到的事。", tag: "官方插件 · 性能数据",
+        c: "// 用官方插件“性能数据”", cardH: "插件用什么语言写都行", cardP: "一个会读写文字的小程序就是插件。开发文档可以整份交给 AI，说出你想要什么，让它帮你写。" },
+      en: { h: "Plug in, do more.", s: "Write a small program, and widgets can do what FullWidget can't on its own.", tag: "Official plugin · Performance data",
+        c: "// the official Performance data plugin", cardH: "Write plugins in any language", cardP: "Any small program that reads and writes lines of text is a plugin. Hand the guide to an AI, say what you want, and let it write one." },
+    }[lang];
+    document.documentElement.lang = lang;
+    for (const k of ["h", "s", "tag", "cardH", "cardP"]) document.getElementById(k).textContent = T[k];
+    document.getElementById("snip").innerHTML = `<span class="c">${T.c}</span>
+<span class="kw">const</span> perf = widget.<span class="fn">plugin</span>(<span class="st">"fullwidget.perf"</span>);
+perf.<span class="fn">on</span>(<span class="st">"stats"</span>, (s) => {
+  fps.textContent = s.fps.value;
+  gpu.textContent = s.gpus[0].util + <span class="st">"%"</span>;
+});`;
+    document.querySelectorAll(".road i").forEach((s, i) => {
+      const z = (0.35 + i / 4) % 1;
+      Object.assign(s.style, { top: `${62 + 38 * z * z}%`, width: `${0.25 + 1.4 * z * z}%`, height: `${0.8 + 9 * z * z}%`, opacity: 0.25 + 0.6 * z });
+    });
+    window.COPY = { lang, media: { title: "", artist: "", album: "" }, device: "" };
+  </script>
+  <script src="../site/widget-host.js"></script>
+  <script src="live.js"></script>
+  <script>
+    const GB = 2 ** 30;
+    const perfAt = (vt) => {
+      const s = (vt - Live.BASE) / 1000;
+      return {
+        time: vt,
+        gpus: [{ name: "GeForce RTX", util: Math.round(86 + 3 * Math.sin(s * 0.8)), vramUsed: 4.6 * GB, vramTotal: 6 * GB, sharedUsed: 0, temp: 71, power: 92, clock: 1702 }],
+        fps: { state: "ok", value: 144, process: "NightDrive", title: "" },
+      };
+    };
+    Live.mount(document.getElementById("perf"), {
+      folder: "../market/widgets/hmgvibe.perf-monitor", t0: 0, plugin: perfAt, locale: lang, settings: { app: "*" },
+      script: "history.length = 0; for (let i = 0; i < 54; i++) history.push(Math.round(140 + 7 * Math.sin(i / 3.5) + 4 * Math.sin(i / 1.4) - (i > 36 && i < 41 ? 30 : 0)));",
+    }).then(async (w) => { for (let t = 0; t <= 4; t += 0.5) { w.sync(t); await new Promise((r) => setTimeout(r, 30)); } });
+  </script>
+</body>
+</html>
