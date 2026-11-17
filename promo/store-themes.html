@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>FullWidget store screenshot: themes</title>
+  <!-- A Microsoft Store screenshot (1920×1080): the same widgets in each of the three themes, side by
+       side. store-themes.html?lang=zh-TW|zh-CN|en, served by `node promo/render.mjs --serve`.
+       The clock is the real widget at 9:41 (live.js); weather and media are the site's previews
+       (site/assets/widgets/<widget>/<theme>.<lang>.webp, drawn at 2×). -->
+  <link rel="stylesheet" href="promo.css">
+  <style>
+    html, body { margin: 0; overflow: hidden; }
+    #c { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden;
+      background: linear-gradient(160deg, #13243a 0%, #1b3f5c 55%, #3b8aa0 100%); }
+    .h { position: absolute; left: 100px; top: 64px; font: 700 92px/1.08 var(--display); letter-spacing: -0.025em; color: #fff; white-space: nowrap; }
+    .s { position: absolute; right: 100px; top: 118px; font: 400 30px/1.3 var(--sans); color: rgba(255, 255, 255, 0.78); white-space: nowrap; }
+    .en .s { right: auto; left: 104px; top: 176px; font-size: 28px; }
+    .en .col { top: 250px; }
+    .col { position: absolute; top: 236px; width: 546px; height: 774px; border-radius: 30px; overflow: hidden;
+      box-shadow: 0 40px 70px -30px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.08); }
+    .col.instrument { left: 100px; background: radial-gradient(120% 80% at 20% 0%, #2c4a66 0%, #172c40 60%, #10202f 100%); }
+    .col.paper { left: 687px; background: radial-gradient(120% 90% at 30% 10%, #e8d8bb 0%, #cdb48e 70%, #b99c74 100%); }
+    .col.type { left: 1274px; background: linear-gradient(180deg, #2a1f5c 0%, #6b3b7c 42%, #c45a72 72%, #f0a066 100%); }
+    .tag { position: absolute; left: 34px; top: 30px; font: 700 28px/1 var(--sans); padding: 13px 24px; border-radius: 999px; background: rgba(255, 255, 255, 0.14); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2); }
+    .paper .tag { background: rgba(40, 28, 10, 0.1); color: #2b2114; box-shadow: inset 0 0 0 1px rgba(40, 28, 10, 0.2); }
+    .col iframe { position: absolute; left: 53px; top: 110px; width: 440px; height: 220px; border: 0; background: transparent; color-scheme: dark; }
+    .paper iframe { color-scheme: light; }
+    .col img { position: absolute; left: 50%; transform: translateX(-50%); }
+    .col img.weather { top: 356px; width: 384px; }
+    .col img.media { top: 600px; width: 408px; }
+    .instrument iframe, .instrument img { filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.3)); }
+    .paper iframe, .paper img { filter: drop-shadow(0 14px 18px rgba(70, 45, 10, 0.25)); }
+  </style>
+</head>
+<body>
+  <div id="c">
+    <div class="h" id="h"></div>
+    <div class="s" id="s"></div>
+  </div>
+  <script>
+    const lang = new URLSearchParams(location.search).get("lang") || "zh-TW";
+    const T = {
+      "zh-TW": { h: "三套主題，一鍵換裝。", s: "整個桌面一起換，也可以每個組件各用各的。", names: ["量被畫出來", "書桌上的紙", "玻璃上的字"] },
+      "zh-CN": { h: "三套主题，一键换装。", s: "整个桌面一起换，也可以每个组件各用各的。", names: ["量被画出来", "书桌上的纸", "玻璃上的字"] },
+      en: { h: "Three themes, one click.", s: "Restyle the whole desktop, or give each widget its own.", names: ["Instrument", "Paper", "Glass"] },
+    }[lang];
+    document.documentElement.lang = lang;
+    document.documentElement.classList.toggle("en", lang === "en");
+    document.getElementById("h").textContent = T.h;
+    document.getElementById("s").textContent = T.s;
+    window.COPY = { lang, media: { title: "", artist: "", album: "" }, device: "" };
+  </script>
+  <script src="../site/widget-host.js"></script>
+  <script src="live.js"></script>
+  <script>
+    const frames = [];
+    ["instrument", "paper", "type"].forEach((theme, i) => {
+      const col = document.createElement("div");
+      col.className = `col ${theme}`;
+      col.innerHTML = `<div class="tag">${T.names[i]}</div><iframe scrolling="no"></iframe>
+        <img class="weather" src="../site/assets/widgets/weather/${theme}.${lang}.webp">
+        <img class="media" src="../site/assets/widgets/media/${theme}.${lang}.webp">`;
+      document.getElementById("c").append(col);
+      frames.push([col.querySelector("iframe"), theme]);
+    });
+    window.READY = Promise.all(frames.map(([f, theme]) => Live.mount(f, { folder: "clock", theme, locale: lang, t0: 0, settings: { showSeconds: false } })))
+      .then(async (ws) => { for (let t = 0; t <= 1; t += 0.5) { ws.forEach((w) => w.sync(t)); await new Promise((r) => setTimeout(r, 50)); } await document.fonts.ready; document.title = "ready"; });
+  </script>
+</body>
+</html>
