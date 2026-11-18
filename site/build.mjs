@@ -30,6 +30,7 @@ fs.writeFileSync(page, fs.readFileSync(page, "utf8")
   .replaceAll("{{FULL_URL}}", `${release}/FullWidget-${version}-win-x64-full.zip`)
   .replaceAll("{{SLIM_URL}}", `${release}/FullWidget-${version}-win-x64.zip`)
   .replaceAll("{{RELEASE_URL}}", `https://github.com/${repo}/releases/tag/v${version}`)
+  .replaceAll("{{STORE_URL}}", "https://apps.microsoft.com/detail/9PGQNBS2R0CZ")
   .replaceAll("{{REPO_URL}}", `https://github.com/${repo}`));
 
 // what the live clock needs: the SDK and the widget's own files

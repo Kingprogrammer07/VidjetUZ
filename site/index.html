@@ -26,7 +26,7 @@
     "operatingSystem": "Windows 11",
     "softwareVersion": "{{VERSION}}",
     "url": "https://hmgvibe.github.io/FullWidget/",
-    "downloadUrl": "{{REPO_URL}}/releases/latest",
+    "downloadUrl": "{{STORE_URL}}",
     "image": "https://hmgvibe.github.io/FullWidget/assets/og.png",
     "license": "https://www.gnu.org/licenses/gpl-3.0.html",
     "inLanguage": ["zh-Hant", "zh-Hans", "en"],
@@ -74,9 +74,9 @@
         <div class="hero-row">
           <p class="hero-sub" data-i18n-html="heroSub">裝好就有 38 個組件。<br>外觀隨你改，功能隨你加。<span class="nowrap">免費，開源。</span></p>
           <div class="hero-act">
-            <a class="btn btn-main" href="{{REPO_URL}}/releases/latest" data-download>
+            <a class="btn btn-main" href="{{STORE_URL}}" data-download>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span data-i18n="download">下載 FullWidget</span>
+              <span data-i18n="download">從 Microsoft Store 安裝</span>
             </a>
             <p class="meta mono">v{{VERSION}} · Windows 11</p>
           </div>
@@ -116,7 +116,7 @@
           </div>
         </div>
         <ol class="scene-steps">
-          <li><span class="pin mono">1</span><div><h3 data-i18n="step1Title">下載，安裝</h3><p data-i18n="step1Text">按幾下「下一步」就裝好，不用管理員權限，也不用帳號。可以順便設定開機啟動。</p></div></li>
+          <li><span class="pin mono">1</span><div><h3 data-i18n="step1Title">下載，安裝</h3><p data-i18n="step1Text">從 Microsoft Store 安裝，不用管理員權限，也不用註冊。想開機啟動，在設定裏打開。</p></div></li>
           <li><span class="pin mono">2</span><div><h3 data-i18n="step2Title">桌面馬上有東西</h3><p data-i18n="step2Text">時鐘、天氣和系統監控自己出現。拖動就能移動，靠近時自動對齊。</p></div></li>
           <li><span class="pin mono">3</span><div><h3 data-i18n="step3Title">想要更多，就添加</h3><p data-i18n="step3Text">在控制中心從 38 個組件裏挑，點一下就放到桌面。</p></div></li>
         </ol>
@@ -290,15 +290,15 @@
       <div class="wrap get-in">
         <div class="get-main">
           <h2 id="get-title" class="h2" data-i18n="getTitle">下載 FullWidget</h2>
-          <p class="get-sub" data-i18n="getSub">免費。下載安裝程式，裝好就能用。</p>
-          <a class="btn btn-mint" href="{{REPO_URL}}/releases/latest" data-download>
+          <p class="get-sub" data-i18n="getSub">免費。從 Microsoft Store 安裝，會自動更新，也不會跳出安全警告。</p>
+          <a class="btn btn-mint" href="{{STORE_URL}}" data-download>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span data-i18n="getBtn">下載 FullWidget</span>
+            <span data-i18n="getBtn">從 Microsoft Store 安裝</span>
           </a>
           <div class="files">
-            <p data-i18n="filesHead">下載頁上有三個檔案，選一個就好：</p>
+            <p data-i18n-html="filesHead">想用安裝程式或免安裝版？<a href="https://github.com/hmgvibe/FullWidget/releases/latest">GitHub 下載頁</a>上有三個檔案：</p>
             <ul>
-              <li><code class="mono">setup.exe</code><span data-i18n="file1">安裝程式，推薦。可以建立桌面捷徑、設定開機啟動。</span></li>
+              <li><code class="mono">setup.exe</code><span data-i18n="file1">安裝程式。可以建立桌面捷徑、設定開機啟動。</span></li>
               <li><code class="mono">full.zip</code><span data-i18n="file2">免安裝，解壓就能用，也能放進隨身碟帶着走。</span></li>
               <li><code class="mono">x64.zip</code><span data-i18n-html="file3">精簡版，要先安裝 <a href="https://dotnet.microsoft.com/download/dotnet/9.0">.NET 9 桌面執行階段</a>。</span></li>
             </ul>
@@ -311,7 +311,7 @@
           </dl>
         </div>
         <div class="get-help">
-          <p class="help-h" data-i18n="helpTitle">第一次打開時</p>
+          <p class="help-h" data-i18n="helpTitle">GitHub 版第一次打開時</p>
           <p data-i18n="helpText">Windows 可能顯示「Windows 已保護您的電腦」。這是因為程式沒有程式碼簽章，不是病毒。</p>
           <div class="ss" aria-hidden="true">
             <div class="ss-win">

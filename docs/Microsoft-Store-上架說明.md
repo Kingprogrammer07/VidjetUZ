@@ -1,5 +1,7 @@
 # Microsoft Store 上架說明
 
+已上架：<https://apps.microsoft.com/detail/9PGQNBS2R0CZ>
+
 FullWidget 以 MSIX 套件上架 Microsoft Store。Store 會用微軟的證書替套件簽名，不用自己買證書；從 Store 安裝的用戶也不會看到「未知的發行者」警告。
 
 GitHub 上的版本照舊（安裝程式和兩個 zip，有自己的更新器）。兩種版本可以並存。
