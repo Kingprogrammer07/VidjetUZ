@@ -59,7 +59,7 @@ static class Program
             FileAssociation.Unregister();
             return 0;
         }
-        string key = "FullWidget_" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Paths.DataDir.ToLowerInvariant())))[..16];
+        string key = "VidjetUZ_" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Paths.DataDir.ToLowerInvariant())))[..16];
 
         using var mutex = new Mutex(true, @"Local\" + key, out bool firstInstance);
         if (!firstInstance)

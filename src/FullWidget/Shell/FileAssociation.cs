@@ -8,8 +8,8 @@ namespace FullWidget.Shell;
 /// .dwz files (from before the rename) open the same way.
 static class FileAssociation
 {
-    const string ProgId = "FullWidget.Package";
-    const string LegacyProgId = "DeskWidgets.Package";
+    const string ProgId = "VidjetUZ.Package";
+    const string LegacyProgId = "VidjetUZ.LegacyPackage";
     static readonly string[] Extensions = { Packages.Extension, Packages.LegacyExtension };
     const string Classes = @"Software\Classes\";
 

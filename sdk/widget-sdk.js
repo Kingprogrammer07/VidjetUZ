@@ -154,6 +154,8 @@
   const order = candidates();
   function t(dict) {
     if (dict == null || typeof dict !== "object") return dict;
+    if (locale.startsWith("uz") && !Object.hasOwn(dict, "uz") && typeof dict.en === "string")
+      return (window.VIDJETUZ_WORDS || {})[dict.en] || dict.en;
     const keys = Object.keys(dict);
     for (const c of order) {
       const k = keys.find((x) => x.toLowerCase() === c);

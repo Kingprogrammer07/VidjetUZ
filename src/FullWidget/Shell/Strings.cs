@@ -5,20 +5,21 @@ namespace FullWidget.Shell;
 static class Strings
 {
     /// "zh-TW", "zh-CN" or "en".
-    public static string Lang { get; private set; } = "zh-TW";
+    public static string Lang { get; private set; } = "uz";
 
     /// Takes a culture name such as "zh-HK", "zh-Hans-CN" or "de-DE".
     public static void SetLanguage(string culture)
     {
         var c = culture.ToLowerInvariant();
-        Lang = !c.StartsWith("zh") ? "en"
+        Lang = c.StartsWith("uz") ? "uz"
+            : !c.StartsWith("zh") ? "en"
             : c is "zh-cn" or "zh-sg" or "zh-hans" || c.StartsWith("zh-hans") ? "zh-CN"
             : "zh-TW";
     }
 
-    static string T(string tw, string cn, string en) => Lang switch { "zh-CN" => cn, "en" => en, _ => tw };
+    static string T(string tw, string cn, string en) => Lang switch { "zh-CN" => cn, "uz" => Core.Uzbek.Translate(en), "en" => en, _ => tw };
 
-    public const string AppName = "FullWidget";
+    public const string AppName = "VidjetUZ";
 
     // ── tray & menus ──
     public static string AddWidget => T("添加組件", "添加组件", "Add widget");

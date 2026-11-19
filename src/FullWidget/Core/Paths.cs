@@ -42,7 +42,7 @@ static class Paths
         string docs = Path.Combine(ResourceRoot, "docs");
         if (which.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) return Path.Combine(docs, which);
         var g = Guides.TryGetValue(which, out var x) ? x : Guides["widget"];
-        string? pick = Shell.Strings.Lang switch { "en" => g.En, "zh-CN" => g.Cn, _ => null };
+        string? pick = Shell.Strings.Lang switch { "uz" => which == "widget" ? "vidjet-qollanma.uz.md" : "plagin-qollanma.uz.md", "en" => g.En, "zh-CN" => g.Cn, _ => null };
         return pick != null && File.Exists(Path.Combine(docs, pick)) ? Path.Combine(docs, pick) : Path.Combine(docs, g.Tw);
     }
 
@@ -92,9 +92,8 @@ static class Paths
         else if (Shell.StorePackage.IsPackaged)
         {
             // The Store copy: inside the package's folder (see Shell/StorePackage.cs).
-            DataDir = Path.Combine(Shell.StorePackage.Roaming, "FullWidget");
-            LocalDir = Path.Combine(Shell.StorePackage.Local, "FullWidget");
-            Shell.StorePackage.CopyFrom(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FullWidget"), DataDir);
+            DataDir = Path.Combine(Shell.StorePackage.Roaming, "VidjetUZ");
+            LocalDir = Path.Combine(Shell.StorePackage.Local, "VidjetUZ");
         }
         else if (File.Exists(Path.Combine(AppContext.BaseDirectory, "portable")) || File.Exists(Path.Combine(AppContext.BaseDirectory, "portable.txt")))
         {
@@ -105,9 +104,8 @@ static class Paths
         }
         else
         {
-            DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FullWidget");
-            LocalDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FullWidget");
-            MovedFromOldName = MoveOldFolder(DataDir) | MoveOldFolder(LocalDir);
+            DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VidjetUZ");
+            LocalDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VidjetUZ");
         }
         Directory.CreateDirectory(DataDir);
         Directory.CreateDirectory(UserWidgetsDir);

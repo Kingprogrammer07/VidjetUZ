@@ -9,14 +9,14 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
-    <AssemblyName>FullWidget</AssemblyName>
+    <AssemblyName>VidjetUZ</AssemblyName>
     <RootNamespace>FullWidget</RootNamespace>
-    <Version>1.4.1</Version>
+    <Version>1.4.2</Version>
     <ApplicationIcon>app.ico</ApplicationIcon>
-    <Product>FullWidget</Product>
-    <Company>FullWidget</Company>
-    <AssemblyTitle>FullWidget</AssemblyTitle>
-    <Description>FullWidget — desktop widgets for Windows</Description>
+    <Product>VidjetUZ</Product>
+    <Company>VidjetUZ</Company>
+    <AssemblyTitle>VidjetUZ</AssemblyTitle>
+    <Description>Windows uchun o‘zbekcha ish stoli vidjetlari</Description>
     <Copyright>Copyright (C) 2026 hmgvibe. Licensed under the GPL-3.0.</Copyright>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <!-- The WebView2 package also ships a WPF assembly we don't use. -->
@@ -44,6 +44,7 @@
     <None Include="..\..\docs\插件開發指南.md" Link="docs\插件開發指南.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\插件开发指南.md" Link="docs\插件开发指南.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\plugin-guide.en.md" Link="docs\plugin-guide.en.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\docs\*.uz.md" LinkBase="docs" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

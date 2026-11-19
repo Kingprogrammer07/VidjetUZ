@@ -97,6 +97,7 @@ loadTimer = setTimeout(loadFailed, 6000);
     again, rather than leave the page blank. */
 function loadFailed() {
   if (!S && navigator.language.toLowerCase().startsWith("zh-cn")) LANG = "zh-CN";
+  else if (!S && navigator.language.toLowerCase().startsWith("uz")) LANG = "uz";
   else if (!S && !navigator.language.toLowerCase().startsWith("zh")) LANG = "en";
   const main = document.getElementById("main");
   main.innerHTML = `<div class="empty"><h3>${t("控制中心沒有載入成功")}</h3>
@@ -630,7 +631,7 @@ function pageThemes() {
 }
 
 function pageSettings() {
-  const langs = [["auto", "跟隨系統"], ["zh-TW", "繁體中文"], ["zh-CN", "简体中文"], ["en", "English"]];
+  const langs = [["uz", "O‘zbekcha"], ["auto", "跟隨系統"], ["zh-TW", "繁體中文"], ["zh-CN", "简体中文"], ["en", "English"]];
   const restart = S.lowResource !== S.lowResourceActive
     ? `<div class="notice"><span>${t("重新啟動後生效")}</span><button class="btn small" data-action="restart">${t("立即重新啟動")}</button></div>` : "";
   return `<div class="page-head" data-key="h-settings"><h1>${t("設定")}</h1></div>
@@ -764,7 +765,7 @@ function updateNote() {
 
 function updateCtl() {
   const u = S.update || { status: "idle", current: S.version };
-  const ver = `<span class="num upd-ver">FullWidget ${esc(S.version)}</span>`;
+  const ver = `<span class="num upd-ver">VidjetUZ ${esc(S.version)}</span>`;
   if (S.store) return ver;
   const blocked = u.blocked && (u.status === "available" || u.blocked !== "dev");
   switch (u.status) {
@@ -797,7 +798,7 @@ function ago(ms) {
   if (m < 1) return t("剛剛");
   if (m < 60) return t("{n} 分鐘前", { n: m });
   if (m < 1440) return t("{n} 小時前", { n: Math.round(m / 60) });
-  return new Date(ms).toLocaleDateString(LANG === "en" ? "en" : LANG === "zh-CN" ? "zh-CN" : "zh-TW");
+  return new Date(ms).toLocaleDateString(LANG === "uz" ? "uz-UZ" : LANG === "en" ? "en" : LANG === "zh-CN" ? "zh-CN" : "zh-TW");
 }
 
 // ───────────────────────── shortcuts ─────────────────────────
@@ -884,7 +885,7 @@ window.addEventListener("blur", stopRecording);
 
 /** Static text in index.html: data-t holds the Traditional Chinese wording. */
 function renderFrame() {
-  document.documentElement.lang = LANG === "en" ? "en" : LANG === "zh-CN" ? "zh-Hans" : "zh-Hant";
+  document.documentElement.lang = LANG === "uz" ? "uz" : LANG === "en" ? "en" : LANG === "zh-CN" ? "zh-Hans" : "zh-Hant";
   document.title = t("FullWidget 控制中心");
   document.querySelectorAll("[data-t]").forEach((el) => {
     el.innerHTML = t(el.dataset.t).split("\n").map(esc).join("<br>");

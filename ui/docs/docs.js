@@ -6,6 +6,7 @@ const host = window.chrome && window.chrome.webview;
 const $ = (id) => document.getElementById(id);
 /** The few words of the reader itself, in the guide's language. */
 const WORDS = {
+  uz: { copy: "Nusxalash", copied: "Nusxalandi", toc: "Mundarija", copyAll: "Hammasini nusxalash", copyAllTip: "Qo‘llanmani to‘liq nusxalash" },
   "zh-TW": { copy: "複製", copied: "已複製", toc: "目錄", copyAll: "複製全文", copyAllTip: "複製整份文檔的 Markdown，可以直接貼給 AI" },
   "zh-CN": { copy: "复制", copied: "已复制", toc: "目录", copyAll: "复制全文", copyAllTip: "复制整份文档的 Markdown，可以直接贴给 AI" },
   en: { copy: "Copy", copied: "Copied", toc: "Contents", copyAll: "Copy all", copyAllTip: "Copies the whole guide as Markdown, ready to paste to an AI" },
@@ -181,6 +182,6 @@ document.addEventListener("click", (e) => {
 });
 
 if (host) {
-  host.addEventListener("message", (e) => { if (e.data && e.data.ev === "doc") { words = WORDS[e.data.lang] || words; document.documentElement.lang = e.data.lang === "en" ? "en" : "zh"; $("toc").setAttribute("aria-label", words.toc); show(e.data.d, e.data.anchor); } });
+  host.addEventListener("message", (e) => { if (e.data && e.data.ev === "doc") { words = WORDS[e.data.lang] || words; document.documentElement.lang = e.data.lang === "uz" ? "uz" : e.data.lang === "en" ? "en" : "zh"; $("toc").setAttribute("aria-label", words.toc); show(e.data.d, e.data.anchor); } });
   host.postMessage({ m: "ready" });
 }

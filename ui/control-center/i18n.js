@@ -375,10 +375,11 @@ const PHRASES = [
   ["已建立「{name}」並放到桌面，資料夾已打開", "已创建“{name}”并放到桌面，文件夹已打开", "Created \"{name}\", added it and opened its folder"],
 ];
 
-const DICT = { "zh-CN": new Map(), en: new Map() };
+const DICT = { "zh-CN": new Map(), en: new Map(), uz: new Map() };
 for (const [tw, cn, en] of PHRASES) {
   DICT["zh-CN"].set(tw, cn);
   DICT.en.set(tw, en);
+  DICT.uz.set(tw, (window.VIDJETUZ_WORDS || {})[en] || en.replaceAll("FullWidget", "VidjetUZ"));
 }
 
 /** The page's language: "zh-TW", "zh-CN" or "en" (set from the host's state). */

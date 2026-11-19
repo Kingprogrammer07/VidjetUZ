@@ -21,7 +21,7 @@ namespace FullWidget.Core;
 /// this one to quit, swaps the files (see Apply) and starts the new copy.
 sealed class Updater
 {
-    public const string DefaultFeed = "https://api.github.com/repos/hmgvibe/FullWidget/releases/latest";
+    public const string DefaultFeed = "https://api.github.com/repos/Kingprogrammer07/VidjetUZ/releases/latest";
     const long MaxDownload = 300L << 20;
     static readonly TimeSpan FirstCheck = TimeSpan.FromMinutes(1), Every = TimeSpan.FromHours(12);
 
@@ -29,7 +29,7 @@ sealed class Updater
     static HttpClient CreateHttp()
     {
         var c = new HttpClient(new SocketsHttpHandler { AutomaticDecompression = DecompressionMethods.All }) { Timeout = Timeout.InfiniteTimeSpan };
-        c.DefaultRequestHeaders.UserAgent.ParseAdd($"FullWidget/{App.Version}");
+        c.DefaultRequestHeaders.UserAgent.ParseAdd($"VidjetUZ/{App.Version}");
         return c;
     }
 
@@ -168,9 +168,9 @@ sealed class Updater
         string page = r.TryGetProperty("html_url", out var h) ? h.GetString() ?? "" : "";
         string want = Kind switch
         {
-            "installer" => $"FullWidget-{version}-setup.exe",
-            "full" => $"FullWidget-{version}-win-x64-full.zip",
-            _ => $"FullWidget-{version}-win-x64.zip",
+            "installer" => $"VidjetUZ-{version}-setup.exe",
+            "full" => $"VidjetUZ-{version}-win-x64-full.zip",
+            _ => $"VidjetUZ-{version}-win-x64.zip",
         };
         if (!r.TryGetProperty("assets", out var assets) || assets.ValueKind != JsonValueKind.Array) return null;
         foreach (var a in assets.EnumerateArray())
@@ -230,7 +230,7 @@ sealed class Updater
     /// The new version's release page (or all releases): to read what's new, or to download by hand.
     public void OpenPage()
     {
-        string url = latest?.Page is { } p && p.StartsWith("https://github.com/", StringComparison.OrdinalIgnoreCase) ? p : "https://github.com/hmgvibe/FullWidget/releases/latest";
+        string url = latest?.Page is { } p && p.StartsWith("https://github.com/", StringComparison.OrdinalIgnoreCase) ? p : "https://github.com/Kingprogrammer07/VidjetUZ/releases/latest";
         Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
     }
 
@@ -299,10 +299,10 @@ sealed class Updater
         if (Directory.Exists(stage)) Directory.Delete(stage, true);
         ZipFile.ExtractToDirectory(zip, stage);
         // the zip holds one folder, FullWidget\
-        string root = File.Exists(Path.Combine(stage, "FullWidget.exe")) ? stage
-            : Directory.GetDirectories(stage).FirstOrDefault(d => File.Exists(Path.Combine(d, "FullWidget.exe")))
-              ?? throw new UpdateException("verify", "no FullWidget.exe in the download");
-        string exe = Path.Combine(root, "FullWidget.exe"), dll = Path.Combine(root, "FullWidget.dll");
+        string root = File.Exists(Path.Combine(stage, "VidjetUZ.exe")) ? stage
+            : Directory.GetDirectories(stage).FirstOrDefault(d => File.Exists(Path.Combine(d, "VidjetUZ.exe")))
+              ?? throw new UpdateException("verify", "no VidjetUZ.exe in the download");
+        string exe = Path.Combine(root, "VidjetUZ.exe"), dll = Path.Combine(root, "VidjetUZ.dll");
         CheckSigner(exe);
         if (File.Exists(dll)) CheckSigner(dll);
         var v = FileVersionInfo.GetVersionInfo(File.Exists(dll) ? dll : exe).FileVersion;
@@ -363,7 +363,7 @@ sealed class Updater
         var copied = new List<string>();
         bool ok = false;
         string from = "?";
-        try { if (Version.TryParse(FileVersionInfo.GetVersionInfo(Path.Combine(target, "FullWidget.dll")).FileVersion, out var fv)) from = fv.ToString(3); }
+            try { if (Version.TryParse(FileVersionInfo.GetVersionInfo(Path.Combine(target, "VidjetUZ.dll")).FileVersion, out var fv)) from = fv.ToString(3); }
         catch (FileNotFoundException) { }
         try
         {
@@ -415,7 +415,7 @@ sealed class Updater
         }
         // the new copy (or the old one, put back) opens; it clears the leftovers
         string args = dataDirArg != null ? $"\"--data-dir={dataDirArg}\"" : "";
-        try { Process.Start(new ProcessStartInfo(Path.Combine(target, "FullWidget.exe"), args) { UseShellExecute = false, WorkingDirectory = target }); }
+        try { Process.Start(new ProcessStartInfo(Path.Combine(target, "VidjetUZ.exe"), args) { UseShellExecute = false, WorkingDirectory = target }); }
         catch (Exception ex) { Log.Error("Update: could not start FullWidget again", ex); }
         return ok ? 0 : 1;
     }

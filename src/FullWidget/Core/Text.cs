@@ -17,7 +17,8 @@ static class Text
         foreach (var key in Candidates(Locale))
             foreach (var p in v.EnumerateObject())
                 if (string.Equals(p.Name, key, StringComparison.OrdinalIgnoreCase) && p.Value.ValueKind == JsonValueKind.String)
-                    return p.Value.GetString()!;
+                    return key.Equals("en", StringComparison.OrdinalIgnoreCase) && Locale.StartsWith("uz", StringComparison.OrdinalIgnoreCase)
+                        ? Uzbek.Translate(p.Value.GetString()!) : p.Value.GetString()!;
         foreach (var p in v.EnumerateObject())
             if (p.Value.ValueKind == JsonValueKind.String) return p.Value.GetString()!;
         return fallback;

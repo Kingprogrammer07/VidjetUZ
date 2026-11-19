@@ -7,9 +7,9 @@ namespace FullWidget.Shell;
 static class AutoStart
 {
     const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    const string ValueName = "FullWidget";
+    const string ValueName = "VidjetUZ";
     /// The entry's name before the app was renamed from DeskWidgets.
-    const string LegacyValueName = "DeskWidgets";
+    const string LegacyValueName = "VidjetUZ.Legacy";
 
     /// The --data-dir this copy runs with (test profiles), so autostart opens the same data.
     public static string? DataDirArg { get; set; }

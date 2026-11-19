@@ -7,7 +7,7 @@ sealed class AppConfig
     public int Version { get; set; } = 1;
     public bool FirstRunDone { get; set; }
     /// "auto" follows Windows.
-    public string Language { get; set; } = "auto";
+    public string Language { get; set; } = "uz";
     /// Turns off GPU acceleration and asks WebView2 to use less memory. Needs a restart.
     public bool LowResourceMode { get; set; }
     /// Enables DevTools (F12), reload (F5) and reload-on-save in widgets.
@@ -24,7 +24,7 @@ sealed class AppConfig
     /// Widgets this user made with "新建組件": the user wrote them, so what they declare is allowed.
     public List<string> OwnWidgets { get; set; } = new();
     /// Lets Windows open .fwz files with FullWidget (double-click to install).
-    public bool FileAssociation { get; set; } = true;
+    public bool FileAssociation { get; set; }
     /// The widget market's index.json; empty = the default (Core/Market.cs).
     public string? MarketUrl { get; set; }
     /// Look for a new FullWidget now and then (Core/Updater.cs). Off unless the user turns it on:

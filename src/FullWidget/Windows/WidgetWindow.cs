@@ -824,6 +824,7 @@ sealed class WidgetWindow : NativeWindow
             $"<link id=\"__fw_theme_link\" rel=\"stylesheet\" href=\"{a.themeHref}\">" +
             $"<style id=\"__fw_theme\">{a.themeCss}</style>" +
             $"<script>window.__FW_BOOT__={boot};</script>" +
+            "<script src=\"/__fw/uz.js\"></script>" +
             "<script src=\"/__fw/widget-sdk.js\"></script>";
         string bottom = $"<style id=\"__fw_user\">{a.userCss}</style>";
 
