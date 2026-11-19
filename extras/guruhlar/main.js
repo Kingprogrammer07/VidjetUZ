@@ -264,15 +264,18 @@ $("edit").addEventListener("click", () => {
   render();
 });
 
-$("add-group").addEventListener("click", () => {
+function createGroup() {
   if (data.groups.length >= MAX_GROUPS) { notify("Ko‘pi bilan 24 ta guruh yaratish mumkin."); return; }
+  editing = true;
   const group = newGroup();
   data.groups.push(group);
   save();
   render();
   $("groups").scrollTop = $("groups").scrollHeight;
   $("groups").querySelector(`[data-group-id="${group.id}"] .group-name-input`)?.focus();
-});
+}
+$("add-group").addEventListener("click", createGroup);
+$("quick-add-group").addEventListener("click", createGroup);
 
 $("groups").addEventListener("dragstart", (event) => {
   if (!editing || event.target.closest("input,button")) return;

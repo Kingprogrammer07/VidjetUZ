@@ -1,9 +1,10 @@
 body { display: flex; flex-direction: column; gap: 10px; }
 [hidden] { display: none !important; }
 button { cursor: pointer; }
-.top, .heading, .toolbar, .group-head, .group-actions { display: flex; align-items: center; }
+.top, .heading, .header-actions, .toolbar, .group-head, .group-actions { display: flex; align-items: center; }
 .top { justify-content: space-between; flex: none; gap: 10px; min-height: 39px; }
 .heading { min-width: 0; gap: 10px; }
+.header-actions { flex: none; gap: 5px; }
 .mark { display: grid; place-items: center; width: 37px; height: 37px; flex: none; border-radius: 11px; background: color-mix(in srgb, var(--w-accent) 20%, transparent); color: var(--w-accent); font-size: 23px; }
 h1 { margin: 0; font: 650 1.05rem/1.25 var(--w-font-title); }
 small { display: block; margin-top: 2px; color: var(--w-fg-muted); font-size: .76rem; }

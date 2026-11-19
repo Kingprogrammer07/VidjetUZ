@@ -4,8 +4,8 @@
 
 ## Foydalanish
 
-1. Vidjetdagi **✎** tugmasini bosing.
-2. **+ Yangi guruh** bilan guruh yarating va **Guruh nomi** maydonida nomlang. Shu tugma bilan yana guruhlar qo‘shing.
+1. Vidjetning yuqori o‘ngidagi **+** tugmasini bosib yangi guruh yarating. Ko‘proq guruh qo‘shish uchun shu tugmani yana bosing.
+2. **Guruh nomi** maydonida unga nom bering. **✎** tugmasi mavjud guruhlarni tahrirlash rejimini ochadi.
 3. Kerakli guruh ichidagi **+ Papka** tugmasi bilan unga papka tanlang. **+ Fayl** yorliq va fayllarni ham qabul qiladi. Explorer’dan papkani to‘g‘ridan-to‘g‘ri guruh ustiga sudrab qo‘yish mumkin.
 4. Element ostidagi maydonda ko‘rinadigan nomini o‘zgartiring. Tahrirlashda elementni sudrab shu yoki boshqa guruhga ko‘chiring. **×** faqat yorliqni olib tashlaydi.
 5. **✓** tugmasi bilan tahrirlashni yoping. Papkani ochish uchun uning belgisini bosing.
