@@ -1,0 +1,13 @@
+{
+  "id": "user.guruhlar",
+  "name": { "uz": "Papka guruhlari", "en": "Folder groups" },
+  "description": { "uz": "Papkalarni nomlangan guruhlarga joylang", "en": "Put folders into named desktop groups" },
+  "version": "1.0.0",
+  "author": "VidjetUZ",
+  "entry": "index.html",
+  "icon": "icon.svg",
+  "category": "productivity",
+  "size": { "width": 390, "height": 300, "minWidth": 260, "minHeight": 170, "maxWidth": 1000, "maxHeight": 900, "grow": 0.7 },
+  "permissions": ["shell.launch"],
+  "settings": []
+}

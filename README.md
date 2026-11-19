@@ -41,6 +41,8 @@ FullWidget ma’lumotlari boshqa jildda saqlanadi va VidjetUZ ularni ko‘chirma
 
 Yangi vidjet yaratish uchun **Vidjetlar qo‘shish → Yangi vidjet**ni oching. O‘zbekcha [boshlang‘ich qo‘llanma](docs/vidjet-qollanma.uz.md) mavjud. Batafsil texnik API hujjati [asl inglizcha qo‘llanmada](docs/widget-guide.en.md) saqlangan.
 
+Papkalarni nomlangan kartalarga ajratish uchun [Papka guruhlari vidjeti](extras/guruhlar/README.md) ham bor. Har bir karta mustaqil guruh; papkalar faqat yorliq sifatida qo‘shiladi.
+
 ## Manba va litsenziya
 
 Dastur kodi [GPL-3.0](LICENSE) asosida. `sdk/` va `templates/` alohida [MIT litsenziyasi](sdk/LICENSE) ostida. Asl muallif va loyiha: [hmgvibe/FullWidget](https://github.com/hmgvibe/FullWidget). [Asl README](README.upstream.md) ham saqlangan. VidjetUZ FullWidget’ning rasmiy versiyasi emas.
