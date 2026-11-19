@@ -2,7 +2,7 @@
   "id": "user.guruhlar",
   "name": { "uz": "Papka guruhlari", "en": "Folder groups" },
   "description": { "uz": "Bitta vidjet ichida bir nechta papka guruhi", "en": "Multiple named folder groups inside one widget" },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "VidjetUZ",
   "entry": "index.html",
   "icon": "icon.svg",

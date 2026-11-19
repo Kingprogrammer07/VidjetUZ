@@ -10,6 +10,12 @@
 4. Element ostidagi maydonda ko‘rinadigan nomini o‘zgartiring. Tahrirlashda elementni sudrab shu yoki boshqa guruhga ko‘chiring. **×** faqat yorliqni olib tashlaydi.
 5. **✓** tugmasi bilan tahrirlashni yoping. Papkani ochish uchun uning belgisini bosing.
 
+Papka nomi bir necha qatorga sig‘ib, to‘liq ko‘rinadi. Tahrirlash rejimida har bir guruh uchun **Guruh eni**, **Guruh balandligi**, **Papka eni** va **Belgi o‘lchami** slayderlari bor. Vidjetning tashqi o‘lchamini VidjetUZ’ning odatiy o‘lcham tutqichi orqali o‘zgartiring.
+
+Vidjetning pushti-binafsha neon chegarasi doim ko‘rinadi; **Neon harakati** belgisi aylanishni to‘xtatadi yoki yoqadi. Windows’da harakatni kamaytirish sozlamasi yoqilgan bo‘lsa, chegara harakatsiz turadi.
+
+Orqa fondagi haqiqiy Windows blur uchun boshqaruv markazida shu vidjetning **Ko‘rinish → Uslub → Muzli (Frosted)** turini tanlang. CSS shisha qatlami ham bor, lekin ish stoli rasmini xiralashtirish VidjetUZ’ning Windows acrylic rejimi orqali ishlaydi.
+
 Guruhni o‘chirish ikki marta bosib tasdiqlanadi. Bu amal asl papkalarni o‘chirmaydi. Ko‘proq guruhlarni bir vaqtda ko‘rish uchun vidjetni kattalashtiring.
 
 ## Qo‘lda o‘rnatish

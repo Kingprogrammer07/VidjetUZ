@@ -4,7 +4,7 @@ const $ = (id) => document.getElementById(id);
 const MAX_GROUPS = 24;
 const MAX_ITEMS = 48;
 const info = new Map();
-let data = { groups: [newGroup()] };
+let data = { groups: [newGroup()], neonMotion: true };
 let editing = false;
 let armedDelete = null;
 let dragging = null;
@@ -12,7 +12,19 @@ let saveTimer = 0;
 let noticeTimer = 0;
 
 function newGroup() {
-  return { id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`, name: "Yangi guruh", collapsed: false, items: [] };
+  return { id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`, name: "Yangi guruh", collapsed: false, width: 100, height: 130, tileWidth: 112, iconSize: 42, items: [] };
+}
+
+function clampSize(value, min, max, fallback) {
+  const number = Number(value);
+  return Number.isFinite(number) ? Math.max(min, Math.min(max, Math.round(number))) : fallback;
+}
+
+function applySizes(section, group) {
+  section.style.setProperty("--group-width", `${group.width}%`);
+  section.style.setProperty("--group-height", `${group.height}px`);
+  section.style.setProperty("--tile-width", `${group.tileWidth}px`);
+  section.style.setProperty("--icon-size", `${group.iconSize}px`);
 }
 
 function notify(message) {
@@ -125,6 +137,7 @@ function renderGroup(group) {
   const section = document.createElement("section");
   section.className = "group" + (group.collapsed ? " collapsed" : "");
   section.dataset.groupId = group.id;
+  applySizes(section, group);
 
   const head = button("", "group-head", () => {
     group.collapsed = !group.collapsed;
@@ -175,6 +188,42 @@ function renderGroup(group) {
     label.append(input);
     editor.append(label);
 
+    const sizes = document.createElement("div");
+    sizes.className = "size-controls";
+    const controls = [
+      ["width", "Guruh eni", 48, 100, "%"],
+      ["height", "Guruh balandligi", 130, 500, "px"],
+      ["tileWidth", "Papka eni", 86, 210, "px"],
+      ["iconSize", "Belgi o‘lchami", 28, 90, "px"],
+    ];
+    for (const [key, caption, min, max, unit] of controls) {
+      const row = document.createElement("label");
+      const heading = document.createElement("span");
+      const text = document.createElement("span");
+      text.textContent = caption;
+      const value = document.createElement("output");
+      value.textContent = `${group[key]}${unit}`;
+      heading.append(text, value);
+      const slider = document.createElement("input");
+      slider.type = "range";
+      slider.min = String(min);
+      slider.max = String(max);
+      slider.step = "1";
+      slider.value = String(group[key]);
+      slider.setAttribute("aria-label", caption);
+      slider.setAttribute("data-no-drag", "");
+      slider.addEventListener("input", () => {
+        group[key] = Number(slider.value);
+        value.textContent = `${group[key]}${unit}`;
+        applySizes(section, group);
+        saveSoon();
+      });
+      slider.addEventListener("change", save);
+      row.append(heading, slider);
+      sizes.append(row);
+    }
+    editor.append(sizes);
+
     const actions = document.createElement("div");
     actions.className = "group-actions";
     actions.append(button("+ Papka", "", () => pickInto(group.id, "folder")));
@@ -213,6 +262,8 @@ function render() {
   $("edit").title = editing ? "Tayyor" : "Guruhlarni sozlash";
   $("edit").setAttribute("aria-label", $("edit").title);
   $("toolbar").hidden = !editing;
+  $("neon-motion").checked = data.neonMotion !== false;
+  document.body.classList.toggle("neon-paused", data.neonMotion === false);
   $("no-groups").hidden = data.groups.length !== 0;
   const container = $("groups");
   const scroll = container.scrollTop;
@@ -262,6 +313,11 @@ $("edit").addEventListener("click", () => {
   editing = !editing;
   armedDelete = null;
   render();
+});
+$("neon-motion").addEventListener("change", () => {
+  data.neonMotion = $("neon-motion").checked;
+  document.body.classList.toggle("neon-paused", !data.neonMotion);
+  save();
 });
 
 function createGroup() {
@@ -331,6 +387,10 @@ function normalizeGroup(raw) {
   group.id = typeof raw.id === "string" && raw.id ? raw.id : group.id;
   group.name = typeof raw.name === "string" ? raw.name.trim().slice(0, 40) || "Yangi guruh" : group.name;
   group.collapsed = raw.collapsed === true;
+  group.width = clampSize(raw.width, 48, 100, 100);
+  group.height = clampSize(raw.height, 130, 500, 130);
+  group.tileWidth = clampSize(raw.tileWidth, 86, 210, 112);
+  group.iconSize = clampSize(raw.iconSize, 28, 90, 42);
   group.items = Array.isArray(raw.items) ? raw.items.filter((item) => item && typeof item.path === "string" && item.path.trim())
     .slice(0, MAX_ITEMS).map((item) => ({ path: item.path, label: typeof item.label === "string" ? item.label.slice(0, 40) : "" })) : [];
   return group;
@@ -339,6 +399,7 @@ function normalizeGroup(raw) {
 widget.storage.get("group").then((saved) => {
   if (saved && typeof saved === "object" && Array.isArray(saved.groups)) {
     data.groups = saved.groups.slice(0, MAX_GROUPS).filter((raw) => raw && typeof raw === "object").map(normalizeGroup);
+    data.neonMotion = saved.neonMotion !== false;
   } else if (saved && typeof saved === "object") {
     // Version 1 stored one group directly. Keep its name and items when upgrading.
     data.groups = [normalizeGroup(saved)];
