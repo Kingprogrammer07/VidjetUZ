@@ -7,20 +7,16 @@
 </head>
 <body>
   <header class="top">
-    <div class="heading"><span class="mark" aria-hidden="true">▦</span><div><h1 id="title">Yangi guruh</h1><small id="count">0 ta papka</small></div></div>
-    <button id="edit" class="icon-button" type="button" data-no-drag aria-label="Guruhni sozlash" title="Guruhni sozlash">✎</button>
+    <div class="heading"><span class="mark" aria-hidden="true">▦</span><div><h1>Papka guruhlari</h1><small id="summary">1 ta guruh</small></div></div>
+    <button id="edit" class="icon-button" type="button" data-no-drag aria-label="Guruhlarni sozlash" title="Guruhlarni sozlash">✎</button>
   </header>
-  <section id="editor" class="editor" hidden data-no-drag>
-    <label for="name">Guruh nomi</label>
-    <input id="name" type="text" maxlength="40" placeholder="Masalan: Ish loyihalari" autocomplete="off" spellcheck="false">
-    <div class="actions">
-      <button id="add-folder" type="button">+ Papka</button>
-      <button id="add-file" type="button">+ Fayl yoki yorliq</button>
-    </div>
-  </section>
-  <main id="items" class="items" aria-label="Guruhdagi papkalar"></main>
-  <div id="empty" class="empty">Papka qo‘shish uchun ✎ tugmasini bosing yoki papkani shu yerga sudrang.</div>
-  <div id="drop" class="drop">Qo‘shish uchun qo‘yib yuboring</div>
+  <div id="toolbar" class="toolbar" hidden data-no-drag>
+    <button id="add-group" type="button">+ Yangi guruh</button>
+    <span>Har bir guruhga papka qo‘shing</span>
+  </div>
+  <main id="groups" class="groups" aria-label="Papka guruhlari"></main>
+  <div id="no-groups" class="no-groups" hidden>Hali guruh yo‘q. ✎ tugmasi orqali yangi guruh yarating.</div>
+  <div class="drop" id="drop">Papkani guruh ustiga qo‘yib yuboring</div>
   <div id="status" class="status" role="status" aria-live="polite"></div>
   <script src="main.js"></script>
 </body>

@@ -41,7 +41,7 @@ FullWidget ma’lumotlari boshqa jildda saqlanadi va VidjetUZ ularni ko‘chirma
 
 Yangi vidjet yaratish uchun **Vidjetlar qo‘shish → Yangi vidjet**ni oching. O‘zbekcha [boshlang‘ich qo‘llanma](docs/vidjet-qollanma.uz.md) mavjud. Batafsil texnik API hujjati [asl inglizcha qo‘llanmada](docs/widget-guide.en.md) saqlangan.
 
-Papkalarni nomlangan kartalarga ajratish uchun [Papka guruhlari vidjeti](extras/guruhlar/README.md) ham bor. Har bir karta mustaqil guruh; papkalar faqat yorliq sifatida qo‘shiladi.
+Papkalarni bitta kartada bir nechta nomlangan bo‘limga ajratish uchun [Papka guruhlari vidjeti](extras/guruhlar/README.md) ham bor. Papkalar faqat yorliq sifatida qo‘shiladi.
 
 ## Manba va litsenziya
 

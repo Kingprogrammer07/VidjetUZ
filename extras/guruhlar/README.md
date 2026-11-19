@@ -1,19 +1,19 @@
 # Papka guruhlari vidjeti
 
-Picketsga o‘xshash papka guruhlari VidjetUZ ish stolida alohida kartalar ko‘rinishida ishlaydi. Har bir karta — bitta guruh. Papkalarning o‘zi ko‘chirilmaydi; vidjet ularning yorliqlarini saqlaydi.
+**Bitta vidjet ichida bir nechta guruh** yarating. Har bir guruhning nomi va papkalari alohida saqlanadi. Barcha guruhlar bitta kartada ketma-ket ko‘rinadi; uzun ro‘yxatni aylantirish, guruh sarlavhasini bosib uni yig‘ish yoki ochish mumkin.
 
 ## Foydalanish
 
-1. Kartadagi **✎** tugmasini bosing.
-2. **Guruh nomi** maydoniga, masalan, `Ish loyihalari` deb yozing.
-3. **+ Papka** bilan papkalarni tanlang. Fayl yoki `.lnk` yorlig‘ini qo‘shish uchun **+ Fayl yoki yorliq**ni bosing. Explorer’dan kartaga sudrab tashlash ham mumkin.
-4. Papka nomini kartada o‘zgartiring, kerak bo‘lmaganini **×** bilan olib tashlang. Tahrirlash paytida elementlarni sudrab tartiblang.
+1. Vidjetdagi **✎** tugmasini bosing.
+2. **+ Yangi guruh** bilan guruh yarating va **Guruh nomi** maydonida nomlang. Shu tugma bilan yana guruhlar qo‘shing.
+3. Kerakli guruh ichidagi **+ Papka** tugmasi bilan unga papka tanlang. **+ Fayl** yorliq va fayllarni ham qabul qiladi. Explorer’dan papkani to‘g‘ridan-to‘g‘ri guruh ustiga sudrab qo‘yish mumkin.
+4. Element ostidagi maydonda ko‘rinadigan nomini o‘zgartiring. Tahrirlashda elementni sudrab shu yoki boshqa guruhga ko‘chiring. **×** faqat yorliqni olib tashlaydi.
 5. **✓** tugmasi bilan tahrirlashni yoping. Papkani ochish uchun uning belgisini bosing.
 
-Yangi guruh uchun boshqaruv markazida **Mening vidjetlarim → Papka guruhlari → Nusxalash**ni bosing. Yangi kartaning nomi va papkalari mustaqil saqlanadi.
+Guruhni o‘chirish ikki marta bosib tasdiqlanadi. Bu amal asl papkalarni o‘chirmaydi. Ko‘proq guruhlarni bir vaqtda ko‘rish uchun vidjetni kattalashtiring.
 
 ## Qo‘lda o‘rnatish
 
 VidjetUZ’da **Vidjetlar qo‘shish → Yangi vidjet**ni tanlab, nomini `Guruhlar` deb yozing. Ochilgan jildga shu yerdagi `widget.json`, `index.html`, `main.js`, `style.css`, `icon.svg` fayllarini ko‘chiring. Vidjet avtomatik qayta yuklanadi.
 
-Vidjet `shell.launch` ruxsatidan faqat siz bosgan papka yoki faylni ochish, fayl tanlash va belgisini o‘qish uchun foydalanadi. Internetga ulanmaydi. Guruhlar VidjetUZ’ning har bir nusxa uchun alohida mahalliy xotirasida saqlanadi.
+Vidjet `shell.launch` ruxsatidan siz tanlagan papka yoki faylni ochish, uning nomi va belgisini o‘qish uchun foydalanadi. Internetga ulanmaydi. Guruhlar kompyuteringizda, vidjetning mahalliy xotirasida saqlanadi. Avvalgi bir guruhli talqinda saqlangan nom va papkalar avtomatik ko‘chadi.
