@@ -45,6 +45,9 @@
     <None Include="..\..\docs\插件开发指南.md" Link="docs\插件开发指南.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\plugin-guide.en.md" Link="docs\plugin-guide.en.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\*.uz.md" LinkBase="docs" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\README.md" Link="README.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\screenshots\*.png" LinkBase="screenshots" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
