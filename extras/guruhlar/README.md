@@ -1,6 +1,6 @@
 # Papka guruhlari vidjeti
 
-**Bitta vidjet ichida bir nechta guruh** yarating. Har bir guruhning nomi va papkalari alohida saqlanadi. Barcha guruhlar bitta kartada ketma-ket ko‘rinadi; uzun ro‘yxatni aylantirish, guruh sarlavhasini bosib uni yig‘ish yoki ochish mumkin.
+**Bitta vidjet ichida bir nechta guruh** yarating. Har bir guruhning nomi va papkalari alohida saqlanadi. Barcha guruhlar bitta kartada ketma-ket ko‘rinadi; uzun ro‘yxatni sichqoncha g‘ildiragi, sensor panel yoki klaviatura bilan aylantirish, guruh sarlavhasini bosib uni yig‘ish yoki ochish mumkin. Scrollbar dizaynni siqmasligi uchun yashirilgan.
 
 ## Foydalanish
 

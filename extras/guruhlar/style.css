@@ -22,7 +22,8 @@ small { display: block; margin-top: 2px; color: var(--w-fg-muted); font-size: .7
 .toolbar span { color: var(--w-fg-muted); font-size: .72rem; }
 .neon-toggle { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; color: var(--w-fg-muted); font-size: .74rem; cursor: pointer; }
 .neon-toggle input { accent-color: #d86af3; }
-.groups { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 9px; flex: 1; min-height: 0; overflow-y: auto; padding-right: 2px; scrollbar-width: thin; }
+.groups { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 9px; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-right: 2px; scrollbar-width: none; }
+.groups::-webkit-scrollbar { display: none; }
 .group { flex: none; width: min(100%, calc(var(--group-width, 100%) - 5px)); min-width: min(100%, 210px); min-height: var(--group-height, 130px); padding: 9px; border: 1px solid rgba(211, 149, 255, .24); border-radius: 12px; background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(196,103,244,.035)); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
 .group.collapsed { min-height: 0; }
 .group.drop-target { border-color: var(--w-accent); background: color-mix(in srgb, var(--w-accent) 10%, var(--w-control-bg)); }
